@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+<ImageView
+        android:id="@+id/iv_main_logo"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_centerHorizontal="true"
+         />
+
+    <Button
+        android:id="@+id/btn_main_chooseapp"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:background="#3E7FAE"
+        android:layout_below="@id/iv_main_logo"
+        android:layout_centerHorizontal="true"
+        android:text="动态监控"
+        android:textColor="#FFFFFF"
+        android:textSize="36dp" />
+
+    <Button
+        android:id="@+id/btn_main_viewRes"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="#5DB4C0"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btn_main_chooseapp"
+        android:text="查看结果"
+        android:textColor="@color/textWhite"
+        android:textSize="36dp" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_main_server"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/btn_main_viewRes"
+
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <EditText
+            android:id="@+id/et_main_ip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_gravity="center_vertical"
+            android:hint="ip"
+            android:text="192.168.2.233"
+            android:textColorHint="@color/hintGrey"/>
+
+        <EditText
+            android:layout_marginLeft="10dp"
+            android:id="@+id/et_main_port"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:layout_gravity="center_vertical"
+            android:inputType="textPersonName"
+            android:hint="port"
+            android:text="5000"
+            android:textColorHint="@color/hintGrey"/>
+
+        <Button
+            android:id="@+id/btn_main_saveaddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="保存" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_main_clearcache"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/layout_main_server"
+        android:background="#D9F8A7"
+        android:text="清除缓存"
+        android:textColor="#2F494B"
+        android:textSize="22dp"
+        />
+
+    <Switch
+        android:id="@+id/switch_main_isdialingmod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_main_clearcache"
+        android:layout_marginTop="28dp"
+        android:layout_marginRight="16dp"
+        android:textSize="18sp"
+        android:layout_alignParentRight="true"
+        android:text="拨测模式  " />
+
+
+</RelativeLayout>

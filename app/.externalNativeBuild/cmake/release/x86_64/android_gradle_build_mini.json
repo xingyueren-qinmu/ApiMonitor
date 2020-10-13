@@ -1,0 +1,18 @@
+{
+  "buildFiles": [
+    "/Users/qinmu997/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/qinmu997/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/.externalNativeBuild/cmake/release/x86_64\" --target clean"
+  ],
+  "libraries": {
+    "tool-Release-x86_64": {
+      "artifactName": "tool",
+      "buildCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/.externalNativeBuild/cmake/release/x86_64\" --target tool",
+      "abi": "x86_64",
+      "output": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/.externalNativeBuild/cmake/release/x86_64/tool"
+    }
+  }
+}

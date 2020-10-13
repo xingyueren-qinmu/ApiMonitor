@@ -1,0 +1,43 @@
+{
+  "stringTable": {
+    "0": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi19 --gcc-toolchain=/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security -Oz -DNDEBUG -fPIE"
+  },
+  "buildFiles": [
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake",
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/platforms.cmake",
+    "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "tool-Release-armeabi-v7a": {
+      "buildCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/armeabi-v7a\" tool",
+      "buildType": "release",
+      "toolchain": "2521931448",
+      "abi": "armeabi-v7a",
+      "artifactName": "tool",
+      "files": [
+        {
+          "src": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/tool.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/armeabi-v7a/tool",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "2521931448": {
+      "cppCompilerExecutable": "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

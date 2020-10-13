@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake",
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/platforms.cmake",
+    "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "tool-Debug-armeabi-v7a": {
+      "artifactName": "tool",
+      "buildCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a\" tool",
+      "abi": "armeabi-v7a",
+      "output": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a/tool",
+      "runtimeFiles": []
+    }
+  }
+}

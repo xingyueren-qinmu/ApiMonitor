@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="3dp"
+              android:layout_marginBottom="3dp"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal" >
+    <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <CheckBox
+                android:id="@+id/cb_appchosen"
+                android:clickable="false"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        <ImageView
+                android:id="@+id/img_appicon"
+                android:layout_width="40dp"
+                android:layout_height="40dp" >
+        </ImageView>
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_height="40dp">
+            <TextView
+                    android:id="@+id/tv_yingyongmingcheng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="应用名称 : ">
+            </TextView>
+            <TextView
+                    android:id="@+id/tv_appname"
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@id/tv_yingyongmingcheng"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dip"
+                    android:text="Label
+"
+            >
+            </TextView>
+            <TextView
+                    android:id="@+id/tv_baoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_yingyongmingcheng"
+                    android:text="包名:">
+            </TextView>
+            <TextView
+                    android:id="@+id/tv_pkgkname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_appname"
+                    android:layout_alignLeft="@id/tv_appname">
+            </TextView>
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

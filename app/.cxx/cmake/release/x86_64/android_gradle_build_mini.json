@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake",
+    "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/build/cmake/platforms.cmake",
+    "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/x86_64\" clean"
+  ],
+  "buildTargetsCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/x86_64\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "tool-Release-x86_64": {
+      "artifactName": "tool",
+      "buildCommand": "/Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/x86_64\" tool",
+      "abi": "x86_64",
+      "output": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/release/x86_64/tool",
+      "runtimeFiles": []
+    }
+  }
+}
