@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/.externalNativeBuild/cmake/debug/x86",
-  "command": "/Users/qinmu997/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/Users/qinmu997/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/qinmu997/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot    -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O0 -fno-limit-debug-info  -fPIE   -o CMakeFiles/tool.dir/tool.cpp.o -c /Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/src/main/cpp/tool.cpp",
-  "file": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/DAE/ApiMonitor/app/src/main/cpp/tool.cpp"
-}
-]

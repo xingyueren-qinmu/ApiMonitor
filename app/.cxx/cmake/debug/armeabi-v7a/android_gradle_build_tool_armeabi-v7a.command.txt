@@ -1,7 +1,0 @@
-Executable : /Users/qinmu997/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
-arguments : 
--C
-/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a
-tool
-jvmArgs : 
-

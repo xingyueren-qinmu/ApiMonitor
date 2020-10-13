@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/armeabi-v7a",
-  "command": "/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi19 --gcc-toolchain=/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/qinmu997/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot    -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -O0 -fno-limit-debug-info  -fPIE   -o CMakeFiles/tool.dir/tool.cpp.o -c /Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/tool.cpp",
-  "file": "/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/tool.cpp"
-}
-]
