@@ -24,9 +24,6 @@ class Config {
         const val INTENT_RESULTCONTENT_LOGPATH = "INTENT_RESULTCONTENT_LOGPATH"
         const val INTENT_APP_NAME = "INTENT_APP_NAME"
         const val INTENT_FROM_NITIFICATION = "INTENT_FROM_NOTIFICATION"
-        const val INTENT_SERVICE_START_FROM = "INTENT_SERVICE_START_FROM"
-        const val INTENT_START_FROM_SHELL = 0
-        const val INTENT_START_FROM_MAINACTIVITY = 1
         const val INTENT_DIALING_MOD = "INTENT_DIALING_MOD"
         const val INTENT_BC_FROM = "INTENT_BC_FROM"
         const val INTENT_DAE_BC_PKGNAME = "INTENT_DAE_BC_PKGNAME"
@@ -39,7 +36,7 @@ class Config {
         // File Paths
         @SuppressLint("SdCardPath")
         const val PATH_DAEAM_INTERNAL = "/data/data/$DAEAM_PKGNAME"
-        val PATH_DAEAM_DATA = Environment.getExternalStorageDirectory().absolutePath
+        private val PATH_DAEAM_DATA = "${Environment.getExternalStorageDirectory().absolutePath}/Android/data/$DAEAM_PKGNAME"
         val PATH_TESTING_LOG = "$PATH_DAEAM_DATA/testing/"
         val PATH_HISTORY_LOG = "$PATH_DAEAM_DATA/history/"
         const val PATH_TARGET_APP_LOG = "/DAEAM_testing/"

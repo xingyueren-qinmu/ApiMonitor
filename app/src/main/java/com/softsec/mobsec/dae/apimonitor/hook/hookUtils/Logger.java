@@ -1,14 +1,13 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.LinkedHashMap;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
+/**
+ * @author qinmu997
+ */
 public class Logger {
 
     private String methodName;
@@ -66,11 +65,12 @@ public class Logger {
     private void generateLog() {
         StringBuilder sb = new StringBuilder();
         sb.append("\"").append(tag).append("\":{");
+        sb.append("\"timestamp\":").append(System.currentTimeMillis()).append(",");
         sb.append("\"behavior\":\"").append(behaviorName).append("\",");
-        if(!className.equals("")) {
+        if(!"".equals(className)) {
             sb.append("\"class\":\"").append(className).append("\",");
         }
-        if(!methodName.equals("")) {
+        if(!"".equals(methodName)) {
             sb.append("\"method\":\"").append(methodName).append("\",");
         }
         if(methodArgs != null && methodArgs.size() > 0) {

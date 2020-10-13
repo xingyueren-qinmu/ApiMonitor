@@ -1,7 +1,2 @@
 ninja: Entering directory `/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/.cxx/cmake/debug/x86_64'
-[1/2] Building CXX object CMakeFiles/tool.dir/tool.cpp.o
-/Users/qinmu997/W/Develop/Bupt/AndroidSecurity/AASL/DAE/ApiMonitor/app/src/main/cpp/tool.cpp:73:53: warning: result of comparison of constant 18446744073709551615 with expression of type 'unsigned int' is always true [-Wtautological-constant-out-of-range-compare]
-    if((index = appsToHookLine.find(pkgName + ";")) != string::npos)
-       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~
-1 warning generated.
-[2/2] Linking CXX executable tool
+ninja: no work to do.

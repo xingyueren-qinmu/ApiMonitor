@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             AlertDialog.Builder(this@MainActivity)
                 .setTitle("停止Hook")
                 .setMessage("您点击了通知，是否停止所有Hook")
-                .setPositiveButton("确定") { p0, p1 ->
+                .setPositiveButton("确定") { _, _ ->
                     SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, SharedPreferencesUtil.getString(Config.SP_APPS_TO_HOOK))
                     .remove(Config.SP_APPS_TO_HOOK)
                     .apply()
@@ -84,17 +84,17 @@ class MainActivity : AppCompatActivity() {
         btn_main_clearcache.setOnClickListener(clickListener)
         btn_main_viewRes.setOnClickListener(clickListener)
         btn_main_saveaddress.setOnClickListener(clickListener)
-        switch_main_isdialingmod.setOnCheckedChangeListener { compponent, isChecked ->
+        switch_main_isdialingmod.setOnCheckedChangeListener { _, isChecked ->
             val modString = if(isChecked) "拨测模式" else "自动化检测模式"
             AlertDialog.Builder(this@MainActivity)
                 .setTitle("切换模式")
                 .setMessage("是否将模式切换到: $modString")
-                .setPositiveButton("确定") { p0, p1 ->
+                .setPositiveButton("确定") { _, _ ->
                     SharedPreferencesUtil.put(Config.SP_IS_DIALING_MOD, isChecked).apply()
                     layout_main_server.visibility = if(isChecked) View.VISIBLE else View.INVISIBLE
                     stopService(Intent(this@MainActivity, MainService::class.java))
                     startMainService(isChecked, true)
-                }.setNegativeButton("取消") { p0, p1 ->
+                }.setNegativeButton("取消") { _, _ ->
                     switch_main_isdialingmod.isChecked = !isChecked
                 }
                 .show()
