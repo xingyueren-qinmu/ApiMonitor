@@ -64,8 +64,8 @@ public class Logger {
     // 相当于手撸了一个json格式，懒得用JSON库了，毕竟层层叠叠的
     private void generateLog() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"").append(tag).append("\":{");
-        sb.append("\"timestamp\":").append(System.currentTimeMillis()).append(",");
+        sb.append(System.currentTimeMillis()).append(":{");
+        sb.append("\"tag\":\"").append(tag).append("\",");
         sb.append("\"behavior\":\"").append(behaviorName).append("\",");
         if(!"".equals(className)) {
             sb.append("\"class\":\"").append(className).append("\",");
