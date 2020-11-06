@@ -21,6 +21,7 @@ public class CryptoHook extends Hook {
 
     public static final String TAG = "DAEAM_Crypto";
 
+    @Override
     public  void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
         logger.setTag(TAG);
 

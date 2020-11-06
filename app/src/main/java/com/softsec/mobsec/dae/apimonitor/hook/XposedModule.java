@@ -1,7 +1,5 @@
 package com.softsec.mobsec.dae.apimonitor.hook;
 
-import android.app.AndroidAppHelper;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -17,7 +15,6 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
@@ -79,7 +76,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) {
-                        if (param.args[0] == "Xposed") {
+                        if ("Xposed".equals(param.args[0])) {
                             String log = (String) param.args[1];
                             if(log.contains("DAEAM_") && !log.contains("DAEAM_ERROR")) {
                                 FileUtil.writeToFile(log.replace("DAEAM_", ""), absolutePath);
@@ -88,8 +85,6 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
                     }
                 });
         startAllHooks(lpparam);
-
-
     }
 
     private void startAllHooks(XC_LoadPackage.LoadPackageParam lpparam) {

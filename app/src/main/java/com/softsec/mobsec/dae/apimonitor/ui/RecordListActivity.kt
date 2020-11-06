@@ -1,12 +1,15 @@
 package com.softsec.mobsec.dae.apimonitor.ui
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
@@ -47,6 +50,7 @@ class RecordListActivity : AppCompatActivity() {
         initViews()
     }
 
+    @SuppressLint("InflateParams")
     private fun initViews() {
         val viewList = ArrayList<View>()
         val viewTesting = layoutInflater.inflate(R.layout.listview_result, null)
@@ -125,7 +129,7 @@ class RecordListActivity : AppCompatActivity() {
         val lvTesting = viewTesting.findViewById(R.id.lv_result) as ListView
         lvTesting.adapter = RecordListAdapter(this@RecordListActivity, testingRecordInfos)
         // short click to view record detail
-        lvTesting.setOnItemClickListener { v, view, position, l ->
+        lvTesting.setOnItemClickListener { _, _, position, _ ->
             val logFile = File(testingRecordInfos[position].logAbsolutePath)
             val lnr = LineNumberReader(FileReader(logFile))
             lnr.skip(logFile.length())
@@ -133,11 +137,11 @@ class RecordListActivity : AppCompatActivity() {
             AlertDialog.Builder(this@RecordListActivity)
                 .setTitle("选择操作")
                 .setMessage("当前记录长度：$lineNumber\n")
-                .setPositiveButton("删除") { p0, p1 ->
+                .setPositiveButton("删除") { _, _ ->
                     File(testingRecordInfos[position].logAbsolutePath).delete()
                     testingRecordInfos.removeAt(position)
                     lvTesting.adapter = RecordListAdapter(this@RecordListActivity, testingRecordInfos)
-                }.setNeutralButton("结束Hook") { p0, p1 ->
+                }.setNeutralButton("结束Hook") { _, _ ->
                     SharedPreferencesUtil.removeAppToHook(testingRecordInfos[position].pkgName)
                     testingRecordInfos.removeAt(position)
                     lvTesting.adapter = RecordListAdapter(this@RecordListActivity, testingRecordInfos)
@@ -147,19 +151,19 @@ class RecordListActivity : AppCompatActivity() {
 
         val lvHistory = viewHistory.findViewById(R.id.lv_result) as ListView
         lvHistory.adapter = RecordListAdapter(this@RecordListActivity, historyRecordInfos)
-        lvHistory.setOnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
+        lvHistory.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this@RecordListActivity, RecordContentActivity::class.java)
             intent.putExtra(Config.INTENT_RESULTCONTENT_LOGPATH, historyRecordInfos[position].logAbsolutePath)
             intent.putExtra(Config.INTENT_APP_NAME, historyRecordInfos[position].appName)
             startActivity(intent)
         }
-        lvHistory.setOnItemLongClickListener { adapterView, view, position, l ->
+        lvHistory.setOnItemLongClickListener { _, _, position, _ ->
             AlertDialog.Builder(this@RecordListActivity)
                 .setTitle("上传与删除")
                 .setMessage("请选择操作")
-                .setPositiveButton("上传记录") { p0, p1 ->
+                .setPositiveButton("上传记录") { _, _ ->
                     mainServiceBinder.uploadRecord(historyRecordInfos[position].logAbsolutePath)
-                }.setNeutralButton("删除") { p0, p1 ->
+                }.setNeutralButton("删除") { _, _ ->
                     File(historyRecordInfos[position].logAbsolutePath).delete()
                     historyRecordInfos.removeAt(position)
                     lvHistory.adapter = RecordListAdapter(this@RecordListActivity, historyRecordInfos)
@@ -181,15 +185,27 @@ class RecordListActivity : AppCompatActivity() {
                 isTesting = true
                 logFile.name
             }
-        val ai = packageManager.getPackageInfo(pkgName, 0).applicationInfo
-        return RecordInfo(
-            ai.loadLabel(packageManager) as String,
-            pkgName,
-            ai.loadIcon(packageManager),
-            logFile.absolutePath,
-            isTesting,
-            date
+        try {
+            val ai = packageManager.getPackageInfo(pkgName, 0).applicationInfo
+            return RecordInfo(
+                ai.loadLabel(packageManager) as String,
+                pkgName,
+                ai.loadIcon(packageManager),
+                logFile.absolutePath,
+                isTesting,
+                date
             )
+        } catch (e : PackageManager.NameNotFoundException) {
+            return RecordInfo(
+                "",
+                pkgName,
+                ResourcesCompat.getDrawable(resources, R.drawable.android, null)!!,
+                logFile.absolutePath,
+                isTesting,
+                date
+            )
+        }
+
     }
 
     override fun onDestroy() {
@@ -199,7 +215,7 @@ class RecordListActivity : AppCompatActivity() {
 
     inner class RecordListAdapter(
         val context: Context,
-        val recordList: ArrayList<RecordInfo>
+        private val recordList: ArrayList<RecordInfo>
     ): BaseAdapter() {
 
         private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

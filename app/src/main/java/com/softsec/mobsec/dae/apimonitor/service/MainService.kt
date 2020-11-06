@@ -27,7 +27,6 @@ import java.lang.StringBuilder
 import java.util.*
 import kotlin.concurrent.schedule
 
-
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @SuppressLint("Registered")
 class MainService : Service() {
@@ -145,7 +144,7 @@ class MainService : Service() {
                         appLogFile.parentFile.delete()
                     }
                     SharedPreferencesUtil.clearAppInfos(app)
-                    Config.MOD_DAE_TESTING = if(Config.MOD_DAE_TESTING_PKGNAME.equals(app)) {
+                    Config.MOD_DAE_TESTING = if(Config.MOD_DAE_TESTING_PKGNAME == app) {
                         Config.MOD_DAE_TESTING_PKGNAME = ""
                         sendBroadcast(Intent(Config.INTENTFILTER_BC_DAE_TEST_RESULT)
                             .putExtra(Config.INTENT_BC_RES_PATH, historyFile.absolutePath)

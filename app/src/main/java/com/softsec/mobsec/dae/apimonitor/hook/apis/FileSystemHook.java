@@ -18,6 +18,7 @@ public class FileSystemHook extends Hook {
 
     public static final String TAG = "DAEAM_FileSystem";
 
+    @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
         logger.setTag(TAG);
 
@@ -52,11 +53,12 @@ public class FileSystemHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String filePath = (String) param.args[0];
-                if (filePath.contains("DAEAM"))
+                if (filePath.contains("DAEAM")) {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                else
-                    if(((File)param.thisObject).isFile())
+                } else
+                    if(((File)param.thisObject).isFile()) {
                         logger.recordAPICalling(param, "打开文件", "filepath", filePath);
+                    }
             }
         });
 
@@ -67,10 +69,12 @@ public class FileSystemHook extends Hook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String filedir = (String) param.args[0];
                 String fileName = (String) param.args[1];
-                if (filedir.contains("DAEAM") || fileName.contains("DAEAM"))
+                if (filedir.contains("DAEAM") || fileName.contains("DAEAM")) {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                 else
-                     if(((File)param.thisObject).isFile()) logger.recordAPICalling(param, "打开文件", "filedir", filedir, "filename", fileName);
+                } else
+                     if(((File)param.thisObject).isFile()) {
+                         logger.recordAPICalling(param, "打开文件", "filedir", filedir, "filename", fileName);
+                     }
             }
         });
 
@@ -81,13 +85,14 @@ public class FileSystemHook extends Hook {
                 File fileDir = (File) param.args[0];
                 String fileName = (String) param.args[1];
                 if(fileDir != null) {
-                    if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM"))
+                    if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                    else
-                        if(((File)param.thisObject).isFile())
+                    } else
+                        if(((File)param.thisObject).isFile()) {
                             logger.recordAPICalling(param, "打开文件",
                                 "filedir", fileDir.getAbsolutePath(),
                                         "filename", fileName);
+                        }
                 }
             }
         });
@@ -99,10 +104,12 @@ public class FileSystemHook extends Hook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 URI uri = (URI) param.args[0];
                 if(uri!=null) {
-                    if (uri.toString().contains("DAEAM"))
+                    if (uri.toString().contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                    else
-                        if(((File)param.thisObject).isFile()) logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
+                    } else
+                        if(((File)param.thisObject).isFile()) {
+                            logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
+                        }
                 }
             }
         });
