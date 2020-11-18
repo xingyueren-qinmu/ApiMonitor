@@ -25,6 +25,7 @@ public class TelephonyManagerHook extends Hook {
 		methodHookImpl.hookMethod(getLine1Numbermethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取本机号码");
 			}
 		});
@@ -34,8 +35,9 @@ public class TelephonyManagerHook extends Hook {
 		methodHookImpl.hookMethod(listenMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				int eventNo =  (Integer) param.args[1];
-				String eventStr = null;
+				String eventStr = "null";
 				if((eventNo & PhoneStateListener.LISTEN_CELL_LOCATION) != 0){
 					eventStr = "LISTEN_CELL_LOCATION";
 				}
@@ -62,6 +64,7 @@ public class TelephonyManagerHook extends Hook {
 		methodHookImpl.hookMethod(telphonyManager_getDeviceIdMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取设备ID");
 			}
 		});
@@ -72,24 +75,27 @@ public class TelephonyManagerHook extends Hook {
 		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取配置文件的唯一标识符ID");
 			}
 		});
 
 		// 获取手机位置
 		Method telphonyManager_getCellLocationMethod = Reflector.findMethod(TelephonyManager.class, "getCellLocation");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(telphonyManager_getCellLocationMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取基站位置信息");
 			}
 		});
 
 		// 获取系统ID
 		Method cdmaLocation_getSystemId = Reflector.findMethod(CdmaCellLocation.class, "getSystemId");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(cdmaLocation_getSystemId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取系统ID");
 			}
 		});
@@ -97,27 +103,30 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取网络ID
 		Method cdmaLocation_getNetworkId = Reflector.findMethod(CdmaCellLocation.class, "getNetworkId");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(cdmaLocation_getNetworkId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取网络服务种类");
 			}
 		});
 
 		// 获取基站ID
 		Method cdmaLocation_getBaseStationId = Reflector.findMethod(CdmaCellLocation.class, "getBaseStationId");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(cdmaLocation_getBaseStationId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取基站ID");
 			}
 		});
 
 		// 获得cell id
 		Method gsmLocation_getCidMethod = Reflector.findMethod(GsmCellLocation.class, "getCid");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(gsmLocation_getCidMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取GSM原件ID");
 			}
 		});
@@ -125,9 +134,10 @@ public class TelephonyManagerHook extends Hook {
 
 		//获得gsm地区代号
 		Method gsmLocation_getLacMethod = Reflector.findMethod(GsmCellLocation.class, "getLac");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		methodHookImpl.hookMethod(gsmLocation_getLacMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				super.afterHookedMethod(param);
 				logger.recordAPICalling(param, "获取地理位置信息");
 			}
 		});

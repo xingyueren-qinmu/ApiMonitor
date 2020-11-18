@@ -19,6 +19,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class IPCHook extends Hook {
     public static final String TAG = "DAEAM_IPC";
 
+    @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
         logger.setTag(TAG);
 
@@ -127,6 +128,7 @@ public class IPCHook extends Hook {
                 }
             }
         });
+
     }
 }
 

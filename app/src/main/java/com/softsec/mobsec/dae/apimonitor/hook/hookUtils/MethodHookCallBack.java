@@ -20,6 +20,7 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
 
     @Override
     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+        printStackInfo();
     }
 
     protected void printStackInfo() {
@@ -27,12 +28,11 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         StackTraceElement[] stackElements = ex.getStackTrace();
         if(stackElements != null){
             StackTraceElement st;
-            for(int i=0; i<stackElements.length; i++){
-                st = stackElements[i];
-                if(st.getClassName().startsWith("com.android.monitor")||st.getClassName().startsWith("de.robv.android.xposed.XposedBridge"))
-                    continue;
-//                Logger.log_behavior(st.getClassName()+":"+st.getMethodName()+":"+st.getFileName()+":"+st.getLineNumber());
-                XposedBridge.log(st.getClassName()+":"+st.getMethodName()+":"+st.getFileName()+":"+st.getLineNumber());
+            for (StackTraceElement se : stackElements) {
+//                if (se.getClassName().startsWith("com.android.monitor") || se.getClassName().startsWith("de.robv.android.xposed.XposedBridge")) {
+//                    continue;
+//                }
+                XposedBridge.log(se.getClassName() + ":" + se.getMethodName() + ":" + se.getFileName() + ":" + se.getLineNumber());
             }
         }
     }

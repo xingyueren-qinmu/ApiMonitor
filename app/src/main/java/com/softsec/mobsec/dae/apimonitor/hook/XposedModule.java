@@ -88,27 +88,27 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
     }
 
     private void startAllHooks(XC_LoadPackage.LoadPackageParam lpparam) {
-        new CryptoHook().initAllHooks(lpparam);
-        new FileSystemHook().initAllHooks(lpparam);
+//        new CryptoHook().initAllHooks(lpparam);
+//        new FileSystemHook().initAllHooks(lpparam);
         new IPCHook().initAllHooks(lpparam);
-        new HttpHook().initAllHooks(lpparam);
+//        new HttpHook().initAllHooks(lpparam);
         new AccountManagerHook().initAllHooks(lpparam);
-        new AccountManagerHook().initAllHooks(lpparam);
-        new CameraHook().initAllHooks(lpparam);
+//        new AccountManagerHook().initAllHooks(lpparam);
+//        new CameraHook().initAllHooks(lpparam);
         new TelephonyManagerHook().initAllHooks(lpparam);
-        new ActivityManagerHook().initAllHooks(lpparam);
-        new ActivityThreadHook().initAllHooks(lpparam);
-        new AudioRecordHook().initAllHooks(lpparam);
-        new ContentResolverHook().initAllHooks(lpparam);
-        new ContextImplHook().initAllHooks(lpparam);
+//        new ActivityManagerHook().initAllHooks(lpparam);
+//        new ActivityThreadHook().initAllHooks(lpparam);
+//        new AudioRecordHook().initAllHooks(lpparam);
+//        new ContentResolverHook().initAllHooks(lpparam);
+//        new ContextImplHook().initAllHooks(lpparam);
         new LocationManagerHook().initAllHooks(lpparam);
-        new MediaRecorderHook().initAllHooks(lpparam);
-        new NotificationManagerHook().initAllHooks(lpparam);
-        new PackageManagerHook().initAllHooks(lpparam);
-        new ProcessHook().initAllHooks(lpparam);
-        new RuntimeHook().initAllHooks(lpparam);
-        new SmsManagerHook().initAllHooks(lpparam);
-        new WebViewHook().initAllHooks(lpparam);
+//        new MediaRecorderHook().initAllHooks(lpparam);
+//        new NotificationManagerHook().initAllHooks(lpparam);
+//        new PackageManagerHook().initAllHooks(lpparam);
+//        new ProcessHook().initAllHooks(lpparam);
+//        new RuntimeHook().initAllHooks(lpparam);
+//        new SmsManagerHook().initAllHooks(lpparam);
+//        new WebViewHook().initAllHooks(lpparam);
     }
 }
 

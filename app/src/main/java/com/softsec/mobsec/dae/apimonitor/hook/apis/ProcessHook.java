@@ -13,6 +13,7 @@ public class ProcessHook extends Hook {
 
     public static final String TAG = "DAEAM_Process";
 
+    @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam loadPackageParam) {
         logger.setTag(TAG);
 

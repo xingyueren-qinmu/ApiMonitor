@@ -87,12 +87,11 @@ public class FileSystemHook extends Hook {
                 if(fileDir != null) {
                     if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                    } else
-                        if(((File)param.thisObject).isFile()) {
-                            logger.recordAPICalling(param, "打开文件",
-                                "filedir", fileDir.getAbsolutePath(),
-                                        "filename", fileName);
-                        }
+                    } else if(((File)param.thisObject).isFile()) {
+                        logger.recordAPICalling(param, "打开文件",
+                            "filedir", fileDir.getAbsolutePath(),
+                                    "filename", fileName);
+                    }
                 }
             }
         });
@@ -106,10 +105,9 @@ public class FileSystemHook extends Hook {
                 if(uri!=null) {
                     if (uri.toString().contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                    } else
-                        if(((File)param.thisObject).isFile()) {
-                            logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
-                        }
+                    } else if(((File)param.thisObject).isFile()) {
+                        logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
+                    }
                 }
             }
         });

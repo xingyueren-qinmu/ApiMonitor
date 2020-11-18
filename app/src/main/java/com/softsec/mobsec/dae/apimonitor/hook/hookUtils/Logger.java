@@ -47,12 +47,6 @@ public class Logger {
         generateLog();
     }
 
-    public void addMethodArgs(String argName, String content) {
-        if(methodArgs == null) {
-            methodArgs = new LinkedHashMap<>();
-        }
-        methodArgs.put(argName, content);
-    }
 
     public void addRelatedAttrs(String attrName, String content) {
         if(relatedAttrs == null) {
@@ -76,8 +70,9 @@ public class Logger {
         if(methodArgs != null && methodArgs.size() > 0) {
             sb.append("\"methodArgs\":{");
             for (String key : methodArgs.keySet()) {
+                String value = methodArgs.get(key) == null ? "null" : methodArgs.get(key);
                 sb.append("\"").append(key).append("\":\"")
-                        .append(methodArgs.get(key).replace("\"", "\\\""))
+                        .append(value.replace("\"", "\\\""))
                         .append("\",");
             }
             sb.delete(sb.length() - 1, sb.length()).append("},");
