@@ -25,7 +25,7 @@ class DaeBCReceiver : BroadcastReceiver() {
                     val dataDir = context.packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir
                     SharedPreferencesUtil.context = context
                     SharedPreferencesUtil.addAppToHook(pkgName, false, logDir, dataDir)
-                    SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, "$appsToHookStr$pkgName;").apply()
+                    SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, "$appsToHookStr$pkgName;")
                     Config.MOD_DAE_TESTING = true
                     Config.MOD_DAE_TESTING_PKGNAME = pkgName
                 } else {

@@ -152,7 +152,7 @@ class MainService : Service() {
                         false
                     } else Config.MOD_DAE_TESTING
                 }
-                SharedPreferencesUtil.remove(Config.SP_EX_APPS_TO_HOOK).apply()
+                SharedPreferencesUtil.remove(Config.SP_EX_APPS_TO_HOOK)
             }
         }
     }

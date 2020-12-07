@@ -31,6 +31,7 @@ class ChooseAppActivity : AppCompatActivity() {
     private val removedApp = mutableSetOf<String>()
 
 
+    // Todo 清除sp中的冗余项
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtil.context = applicationContext
@@ -58,15 +59,20 @@ class ChooseAppActivity : AppCompatActivity() {
             val sb = StringBuilder()
             for (pkgName in appsToMonitorSet) {
                 if (pkgName == "") continue
-                sb.append(pkgName).append(";")
-
                 // Check write permission and save log path.
                 var canWrite = false
-                for (perm in packageManager.getPackageInfo(pkgName, PackageManager.GET_PERMISSIONS).requestedPermissions)
-                    if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
-                        canWrite = true
-                        break
-                    }
+                try {
+                    val perms = packageManager.getPackageInfo(pkgName, PackageManager.GET_PERMISSIONS).requestedPermissions
+                    for (perm in perms)
+                        if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+                            canWrite = true
+                            break
+                        }
+                } catch(e: PackageManager.NameNotFoundException) {
+                    removedApp.add(pkgName)
+                    continue
+                }
+                sb.append(pkgName).append(";")
                 val writePerm = canWrite && Build.VERSION.SDK_INT < 23
                 val logDir = if (writePerm)
                     Config.PATH_TESTING_LOG
@@ -81,11 +87,12 @@ class ChooseAppActivity : AppCompatActivity() {
                     packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir)
                 Log.i("logPath", logDir + pkgName)
             }
-            SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, sb.toString()).apply()
+            SharedPreferencesUtil.remove(Config.SP_APPS_TO_HOOK)
+            SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, sb.toString())
             sb.clear()
             for (pkgName in removedApp)
                 sb.append(pkgName).append(";")
-            SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, sb.toString()).apply()
+            SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, sb.toString())
             Toast.makeText(this@ChooseAppActivity, "已保存", Toast.LENGTH_SHORT).show()
             onBackPressed()
         }
@@ -128,9 +135,11 @@ class ChooseAppActivity : AppCompatActivity() {
                 appName = applicationInfo.loadLabel(packageManager) as String,
                 pkgName =  applicationInfo.packageName,
                 appIcon = applicationInfo.loadIcon(packageManager),
-                isChecked = appsToMonitorSet.contains(applicationInfo.packageName)
+                isChecked = appsToMonitorSet.contains(applicationInfo.packageName),
+                firstInstallTime = packageManager.getPackageInfo(applicationInfo.packageName, 0).firstInstallTime
             )
             appInfoList.add(appInfo)
+            appInfoList.sortByDescending { it.firstInstallTime }
         }
         return appInfoList
     }

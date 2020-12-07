@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(Config.INTENT_DIALING_MOD, true)
                 if(serverAddress != host)
                     stopService(intent)
-                SharedPreferencesUtil.put(Config.SP_SERVER_ADDRESS, host).apply()
+                SharedPreferencesUtil.put(Config.SP_SERVER_ADDRESS, host)
                 intent.putExtra(Config.INTENT_SERVER_ADDRESS, host)
                 startService(intent)
             }
@@ -69,8 +69,7 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("您点击了通知，是否停止所有Hook")
                 .setPositiveButton("确定") { _, _ ->
                     SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, SharedPreferencesUtil.getString(Config.SP_APPS_TO_HOOK))
-                    .remove(Config.SP_APPS_TO_HOOK)
-                    .apply()
+                    SharedPreferencesUtil.remove(Config.SP_APPS_TO_HOOK)
                 }.setNegativeButton("取消", null)
                 .show()
             false
@@ -90,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("切换模式")
                 .setMessage("是否将模式切换到: $modString")
                 .setPositiveButton("确定") { _, _ ->
-                    SharedPreferencesUtil.put(Config.SP_IS_DIALING_MOD, isChecked).apply()
+                    SharedPreferencesUtil.put(Config.SP_IS_DIALING_MOD, isChecked)
                     layout_main_server.visibility = if(isChecked) View.VISIBLE else View.INVISIBLE
                     stopService(Intent(this@MainActivity, MainService::class.java))
                     startMainService(isChecked, true)

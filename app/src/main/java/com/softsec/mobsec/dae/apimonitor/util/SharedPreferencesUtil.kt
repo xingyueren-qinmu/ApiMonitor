@@ -13,23 +13,22 @@ class SharedPreferencesUtil {
         fun addAppToHook(pkgName : String, writePerm : Boolean, logDir : String, dataDir : String) {
             if(!::sp.isInitialized) sp = context.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
             sp.edit()
-                .putString(Config.SP_APPS_TO_HOOK, sp.getString(Config.SP_APPS_TO_HOOK, "")!! + pkgName + ";")
                 .putBoolean(pkgName + Config.SP_HAS_W_PERMISSION, writePerm)
                 .putString(pkgName + Config.SP_TARGET_APP_LOG_DIR, logDir + pkgName)
                 .putString(pkgName + Config.SP_TARGET_APP_DIR, dataDir)
                 .apply()
-
         }
 
         @SuppressLint("CommitPrefEdits")
-        fun put(key : String, value : Any) : SharedPreferences.Editor{
+        fun put(key : String, value : Any) {
             if(!::sp.isInitialized) sp = context.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
+            val editor = sp.edit()
             when(value) {
-                is String -> sp.edit().putString(key, value)
-                is Boolean -> sp.edit().putBoolean(key, value)
-                is Int -> sp.edit().putInt(key, value)
+                is String -> editor.putString(key, value)
+                is Boolean -> editor.putBoolean(key, value)
+                is Int -> editor.putInt(key, value)
             }
-            return sp.edit()
+            editor.apply()
         }
 
         fun getString(key : String) : String {
@@ -42,9 +41,9 @@ class SharedPreferencesUtil {
             return sp.getBoolean(key, false)
         }
 
-        fun remove(key : String) : SharedPreferences.Editor {
+        fun remove(key : String) {
             if(!::sp.isInitialized) sp = context.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
-            return sp.edit().remove(key)
+            sp.edit().remove(key).apply()
         }
 
         fun clearAppInfos(pkgName : String) {
