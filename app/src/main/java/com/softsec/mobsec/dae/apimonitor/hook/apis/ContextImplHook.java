@@ -24,9 +24,8 @@ public class ContextImplHook extends Hook {
 			action = actions.next();
 			sb.append(action).append(",");
 		}
-		sb.deleteCharAt(sb.length() - 1);
-		return sb.toString();
-		
+		String res = sb.toString();
+		return res.endsWith(",") ? res.substring(0, res.length() - 1) : res;
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class ContextImplHook extends Hook {
 
 		logger.setTag(TAG);
 		try {
-			Method registerReceiverMethod = Reflector.findCustomerMethod(
+			Method registerReceiverMethod = Reflector.findMethod(
 					"android.app.ContextImpl", ClassLoader.getSystemClassLoader(),
 					"registerReceiver", BroadcastReceiver.class, IntentFilter.class);
 			methodHookImpl.hookMethod(registerReceiverMethod, new MethodHookCallBack() {

@@ -1,14 +1,11 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
+import com.softsec.mobsec.dae.apimonitor.util.Config;
+
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
 public abstract class MethodHookCallBack extends XC_MethodHook {
-    private Logger logger;
-
-    protected MethodHookCallBack(Logger logger){
-        this.logger = logger;
-    }
 
     protected MethodHookCallBack() {
 
@@ -20,20 +17,26 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
 
     @Override
     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-        printStackInfo();
     }
 
-    protected void printStackInfo() {
+    protected String getCallingInfo() {
         Throwable ex = new Throwable();
         StackTraceElement[] stackElements = ex.getStackTrace();
-        if(stackElements != null){
-            StackTraceElement st;
-            for (StackTraceElement se : stackElements) {
-//                if (se.getClassName().startsWith("com.android.monitor") || se.getClassName().startsWith("de.robv.android.xposed.XposedBridge")) {
-//                    continue;
-//                }
-                XposedBridge.log(se.getClassName() + ":" + se.getMethodName() + ":" + se.getFileName() + ":" + se.getLineNumber());
+
+        Class clazz = null;
+        for(StackTraceElement st : stackElements) {
+            XposedBridge.log(st.getClassName());
+            if(!st.getClassName().contains(Config.DAEAM_PKGNAME) || st.getClassName().contains("Xposed")) {
+                if(null == clazz) {
+                    clazz = st.getClass();
+                } else {
+                    if(st.getClass().getPackage().toString().startsWith(clazz.getPackage().toString())) {
+                        return "";
+                    }
+                    break;
+                }
             }
         }
+        return clazz.getPackage().toString() + "---" + clazz.getName();
     }
 }

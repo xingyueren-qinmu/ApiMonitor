@@ -57,6 +57,7 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                     if(((File)param.thisObject).isFile()) {
+                        logger.setCallingInfo(getCallingInfo());
                         logger.recordAPICalling(param, "打开文件", "filepath", filePath);
                     }
             }
@@ -73,6 +74,7 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                      if(((File)param.thisObject).isFile()) {
+                         logger.setCallingInfo(getCallingInfo());
                          logger.recordAPICalling(param, "打开文件", "filedir", filedir, "filename", fileName);
                      }
             }
@@ -82,12 +84,14 @@ public class FileSystemHook extends Hook {
         methodHookImpl.hookMethod(fileConstructor3, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
                 File fileDir = (File) param.args[0];
                 String fileName = (String) param.args[1];
                 if(fileDir != null) {
                     if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
+                        logger.setCallingInfo(getCallingInfo());
                         logger.recordAPICalling(param, "打开文件",
                             "filedir", fileDir.getAbsolutePath(),
                                     "filename", fileName);
@@ -101,11 +105,13 @@ public class FileSystemHook extends Hook {
         methodHookImpl.hookMethod(fileConstructor4, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
                 URI uri = (URI) param.args[0];
                 if(uri!=null) {
                     if (uri.toString().contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
+                        logger.setCallingInfo(getCallingInfo());
                         logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
                     }
                 }

@@ -28,9 +28,10 @@ public class IPCHook extends Hook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent[] it = (Intent[]) param.args[0];
-                StringBuffer sb = new StringBuffer();
-                for(Intent i : it)
+                StringBuilder sb = new StringBuilder();
+                for(Intent i : it) {
                     sb.append(i).append(",");
+                }
                 logger.recordAPICalling(param, "打开其他Activity",
                         "activities", sb.toString().substring(0, sb.length() - 1));
             }
@@ -72,9 +73,7 @@ public class IPCHook extends Hook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
-                if(intent !=null && !intent.getAction().contains("mobi.acpm.inspeckage")) {
-                    logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
-                }
+                logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
 
@@ -84,9 +83,7 @@ public class IPCHook extends Hook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
-                if(intent !=null && !intent.getAction().contains("mobi.acpm.inspeckage")) {
-                    logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
-                }
+                logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
 
@@ -96,14 +93,12 @@ public class IPCHook extends Hook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 IntentFilter intentFilter = (IntentFilter) param.args[1];
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append("Actions: ");
                 for(int i=0; i<intentFilter.countActions(); i++) {
-                    sb.append(intentFilter.getAction(i)+",");
+                    sb.append(intentFilter.getAction(i)).append(",");
                 }
-                if(!sb.toString().contains("mobi.acpm.inspeckage")) {
-                    logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
-                }
+                logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
 
@@ -113,19 +108,16 @@ public class IPCHook extends Hook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 IntentFilter intentFilter = (IntentFilter) param.args[1];
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append("Actions: ");
                 for(int i=0; i<intentFilter.countActions(); i++){
-                    sb.append(intentFilter.getAction(i)+",");
+                    sb.append(intentFilter.getAction(i)).append(",");
                 }
 
                 if(param.args[2] != null){
-                    sb.append(" Permissions: "+param.args[2]);
+                    sb.append(" Permissions: ").append(param.args[2]);
                 }
-
-                if(!sb.toString().contains("mobi.acpm.inspeckage")) {
-                    logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
-                }
+                logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
 

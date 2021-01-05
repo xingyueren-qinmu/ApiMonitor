@@ -173,7 +173,6 @@ class MainService : Service() {
         super.onDestroy()
         stopForeground(true)
     }
-
     inner class MainServiceBinder : Binder() {
 
         fun uploadRecord(recordPath: String) {

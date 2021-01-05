@@ -19,7 +19,7 @@ public class PackageManagerHook extends Hook {
 		logger.setTag(TAG);
 
 		try {
-			Method installPackagemethod = Reflector.findCustomerMethod("android.app.ApplicationPackageManager", ClassLoader.getSystemClassLoader(),
+			Method installPackagemethod = Reflector.findMethod("android.app.ApplicationPackageManager", ClassLoader.getSystemClassLoader(),
 					"installPackage", Uri.class, Class.forName("android.content.pm.IPackageInstallObserver"), int.class, String.class);
 			methodHookImpl.hookMethod(installPackagemethod, new MethodHookCallBack() {
 				@Override
@@ -29,7 +29,7 @@ public class PackageManagerHook extends Hook {
 				}
 			});
 
-			Method getInstalledPackagesMethod = Reflector.findCustomerMethod("android.app.ApplicationPackageManager",
+			Method getInstalledPackagesMethod = Reflector.findMethod("android.app.ApplicationPackageManager",
 					ClassLoader.getSystemClassLoader(), "getInstalledPackages", int.class, int.class);
 			methodHookImpl.hookMethod(getInstalledPackagesMethod, new MethodHookCallBack() {
 				@Override

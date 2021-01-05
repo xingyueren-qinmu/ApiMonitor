@@ -17,6 +17,7 @@ import com.softsec.mobsec.dae.apimonitor.R
 import com.softsec.mobsec.dae.apimonitor.util.AppInfo
 import com.softsec.mobsec.dae.apimonitor.util.Config
 import com.softsec.mobsec.dae.apimonitor.util.SharedPreferencesUtil
+import com.softsec.mobsec.dae.apimonitor.util.Util
 import kotlinx.android.synthetic.main.activity_chooseapp.*
 import java.io.File
 import java.lang.StringBuilder
@@ -90,10 +91,18 @@ class ChooseAppActivity : AppCompatActivity() {
             SharedPreferencesUtil.remove(Config.SP_APPS_TO_HOOK)
             SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, sb.toString())
             sb.clear()
-            for (pkgName in removedApp)
+            for (pkgName in removedApp){
                 sb.append(pkgName).append(";")
+            }
             SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, sb.toString())
             Toast.makeText(this@ChooseAppActivity, "已保存", Toast.LENGTH_SHORT).show()
+
+            // 关闭所有被检应用
+            for(pkgName in appsToMonitorSet) {
+                if(pkgName != "") {
+                    Util.execRootCmd("am force-stop $pkgName")
+                }
+            }
             onBackPressed()
         }
 
@@ -128,6 +137,7 @@ class ChooseAppActivity : AppCompatActivity() {
         } else {
             packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES)
         }
+
         sort(listApplications, ApplicationInfo.DisplayNameComparator(packageManager))
         val appInfoList: MutableList<AppInfo> = mutableListOf()
         for (applicationInfo in listApplications) {

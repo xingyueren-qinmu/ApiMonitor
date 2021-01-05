@@ -76,7 +76,7 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				logger.recordAPICalling(param, "获取配置文件的唯一标识符ID");
+				logger.recordAPICalling(param, "获取Sim卡MSI");
 			}
 		});
 
@@ -141,5 +141,30 @@ public class TelephonyManagerHook extends Hook {
 				logger.recordAPICalling(param, "获取地理位置信息");
 			}
 		});
+
+		// 获得运营商信息
+		Method getSimCarrierIdMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierId");
+		if(getSimCarrierIdMethod != null) {
+			methodHookImpl.hookMethod(getSimCarrierIdMethod, new MethodHookCallBack() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					super.afterHookedMethod(param);
+					logger.recordAPICalling(param, "获取运营商信息");
+				}
+			});
+		}
+
+		// 获得运营商信息
+		Method getSimCarrierIdNameMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierIdName");
+		if(getSimCarrierIdNameMethod != null) {
+			methodHookImpl.hookMethod(getSimCarrierIdNameMethod, new MethodHookCallBack() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					super.afterHookedMethod(param);
+					logger.recordAPICalling(param, "获取运营商信息");
+				}
+			});
+		}
+
 	}
 }

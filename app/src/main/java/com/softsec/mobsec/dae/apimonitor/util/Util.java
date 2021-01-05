@@ -1,49 +1,43 @@
 package com.softsec.mobsec.dae.apimonitor.util;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Base64;
+import android.util.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+import java.util.Scanner;
 
+/**
+ * @author qinmu997
+ */
 public class Util {
 
     public static String byteArrayToString(byte[] input) {
-        if(input==null)
+        if(input==null) {
             return "";
+        }
         String out = new String(input);
         int tmp = 0;
         for (int i = 0; i < out.length(); i++) {
             int c = out.charAt(i);
 
             if (c >= 32 && c < 127) {
-                tmp++;
+                tmp ++;
             }
         }
 
         if (tmp > (out.length() * 0.60)) {
             StringBuilder sb = new StringBuilder();
             for (byte b : input) {
-                if (b >= 32 && b < 127)
+                if (b >= 32 && b < 127) {
                     sb.append(String.format("%c", b));
-                else
+                } else {
                     sb.append('.');
+                }
             }
             out = sb.toString();
 
@@ -57,5 +51,46 @@ public class Util {
     @SuppressLint("SimpleDateFormat")
     public static String getDate() {
         return new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss").format(new Date());
+    }
+
+    public static String execRootCmd(String cmd) {
+        Log.i("CMD", cmd);
+        StringBuilder result = new StringBuilder();
+        DataOutputStream dos = null;
+        DataInputStream dis = null;
+        try {
+            // 经过Root处理的android系统即有su命令
+            Process p = Runtime.getRuntime().exec("su");
+            dos = new DataOutputStream(p.getOutputStream());
+            dis = new DataInputStream(p.getInputStream());
+            Scanner scanner = new Scanner(dis);
+            dos.writeBytes(cmd +"\n");
+            dos.flush();
+            dos.writeBytes("exit\n");
+            dos.flush();
+            String line;
+            while ((line = scanner.nextLine()) != null) {
+                result.append(line);
+            }
+            p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (dos != null) {
+                try {
+                    dos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (dis != null) {
+                try {
+                    dis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result.toString();
     }
 }

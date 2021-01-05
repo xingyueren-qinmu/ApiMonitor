@@ -12,6 +12,7 @@ import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -19,6 +20,21 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class ContentResolverHook extends Hook {
 
 	public static final String TAG = "DAEAM_ContentResolver";
+
+	private static Map<String, String> privacyUriMap;
+
+	static {
+		privacyUriMap = new HashMap<>();
+		privacyUriMap.put("content://com.android.contacts", "联系人");
+		privacyUriMap.put("content://media/external/video/media", "视频");
+		privacyUriMap.put("content://media/external/images/media", "图片");
+		privacyUriMap.put("content://sms", "短信");
+		privacyUriMap.put("content://mms-sms", "短信");
+		privacyUriMap.put("content://contacts/", "联系人");
+		privacyUriMap.put("content://call_log", "通话记录");
+		privacyUriMap.put("content://browser/bookmarks", "浏览器书签");
+		privacyUriMap.put("content://com.android.calendar", "日历信息");
+	}
 
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
@@ -31,10 +47,14 @@ public class ContentResolverHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
-				if (isSensitiveUri(uri)) {
+				String privacyType = getPrivacyType(uri);
+				if (!"".equals(privacyType)) {
 					String queryStr = concatenateQuery(uri, (String[]) param.args[1], (String) param.args[2], (String[]) param.args[3],
 							(String) param.args[4]);
-					logger.recordAPICalling(param, "查询数据库", "URI", uri.toString(), "querySQL", queryStr);
+					logger.recordAPICalling(param, "查询本机数据",
+							"数据类型", privacyType,
+							"URI", uri.toString(),
+							"querySQL", queryStr);
 				}
 			}
 		});
@@ -45,9 +65,14 @@ public class ContentResolverHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
-				if (isSensitiveUri(uri)) logger.recordAPICalling(param,
-						"监听数据库","URI", uri.toString(),
-						"ClassName", param.args[1].getClass().toString());
+				String privacyType = getPrivacyType(uri);
+				if (!"".equals(privacyType)) {
+					logger.recordAPICalling(param,
+						"监听本机数据",
+							"数据类型", privacyType,
+							"URI", uri.toString(),
+							"ClassName", param.args[1].getClass().toString());
+				}
 			}
 		});
 
@@ -57,9 +82,13 @@ public class ContentResolverHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
-				if (isSensitiveUri(uri)) {
+				String privacyType = getPrivacyType(uri);
+				if (!"".equals(privacyType)) {
 					String insertStr = concatenateInsert(uri, (ContentValues) param.args[1]);
-					logger.recordAPICalling(param, "向数据库添加数据", "URI", uri.toString(), "insertSQL", insertStr);
+					logger.recordAPICalling(param, "向本机数据库添加数据",
+							"类型", privacyType,
+							"URI", uri.toString(),
+							"insertSQL", insertStr);
 				}
 			}
 		});
@@ -71,9 +100,13 @@ public class ContentResolverHook extends Hook {
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
 
-				if (isSensitiveUri(uri)) {
+				String privacyType = getPrivacyType(uri);
+				if (!"".equals(privacyType)) {
 					String deleteStr = concatenateDelete(uri, (String) param.args[1], (String[]) param.args[2]);
-					logger.recordAPICalling(param, "删除数据库数据",  "URI", uri.toString(), "deleteSQL", deleteStr);
+					logger.recordAPICalling(param, "删除数据库数据",
+							"数据类型", privacyType,
+							"URI", uri.toString(),
+							"deleteSQL", deleteStr);
 				}
 			}
 
@@ -85,34 +118,36 @@ public class ContentResolverHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
-				if (isSensitiveUri(uri)) {
+				String privacyType = getPrivacyType(uri);
+				if (!"".equals(privacyType)) {
 					String updateStr = concatenateUpdate(uri, (ContentValues) param.args[1], (String) param.args[2], (String[]) param.args[3]);
-					logger.recordAPICalling(param, "更新数据库数据", "URI", uri.toString(), "updateSQL", updateStr);
+					logger.recordAPICalling(param, "更新数据库数据",
+							"数据类型", privacyType,
+							"URI", uri.toString(),
+							"updateSQL", updateStr);
 				}
 			}
 		});
 	}
 
-	private static final String[] privacyUris = { "content://com.android.contacts", "content://sms", "content://mms-sms", "content://contacts/",
-			"content://call_log", "content://browser/bookmarks" };
-
-	private boolean isSensitiveUri(Uri uri) {
+	private String getPrivacyType(Uri uri) {
 		String url = uri.toString().toLowerCase();
-		for (int i = 0; i < privacyUris.length; i++) {
-			if (url.startsWith(privacyUris[i])) {
-				return true;
+		for(String key : privacyUriMap.keySet()) {
+			if(url.startsWith(key)) {
+				return privacyUriMap.get(key);
 			}
 		}
-		return false;
+		return "";
 	}
 
 	private String concatenateStringArray(String[] array, String splitstr) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
-			if (i == array.length - 1)
+			if (i == array.length - 1) {
 				sb.append(array[i]);
-			else
-				sb.append(array[i] + splitstr);
+			} else {
+				sb.append(array[i]).append(splitstr);
+			}
 		}
 		return sb.toString();
 	}
@@ -137,8 +172,9 @@ public class ContentResolverHook extends Hook {
 				sb.append(selectstr);
 			}
 		}
-		if (!TextUtils.isEmpty(sortOrder))
+		if (!TextUtils.isEmpty(sortOrder)) {
 			sb.append(" order by " + sortOrder);
+		}
 		return sb.toString();
 	}
 
@@ -153,10 +189,11 @@ public class ContentResolverHook extends Hook {
 		sb.append(" ) ");
 		sb.append(" values (");
 		for (int i = 0; i < keysArray.length; i++) {
-			if (i == keysArray.length - 1)
+			if (i == keysArray.length - 1) {
 				sb.append(" " + cv.get(keysArray[i]));
-			else
+			} else {
 				sb.append(" " + cv.get(keysArray[i]) + ",");
+			}
 		}
 		sb.append(" )");
 		return sb.toString();
@@ -168,12 +205,12 @@ public class ContentResolverHook extends Hook {
 		sb.append("[" + uri.toString() + "]");
 		if (!TextUtils.isEmpty(selection)) {
 			sb.append(" where ");
-			if (selectionArgs == null)
+			if (selectionArgs == null) {
 				sb.append(selection);
-			else {
+			} else {
 				String selectstr = selection;
-				for (int i = 0; i < selectionArgs.length; i++) {
-					selectstr = selectstr.replaceFirst("/?", selectionArgs[i]);
+				for (String selectionArg : selectionArgs) {
+					selectstr = selectstr.replaceFirst("/?", selectionArg);
 				}
 				sb.append(selectstr);
 			}
@@ -184,7 +221,7 @@ public class ContentResolverHook extends Hook {
 	private String concatenateUpdate(Uri uri, ContentValues cv, String selection, String[] selectionArgs) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" update ");
-		sb.append("[" + uri.toString() + "]");
+		sb.append("[").append(uri.toString()).append("]");
 		sb.append(" set ");
 		String[] keysArray = (String[]) this.getContentValuesKeySet(cv).toArray();
 		for (int i = 0; i < keysArray.length; i++) {
@@ -196,9 +233,9 @@ public class ContentResolverHook extends Hook {
 		}
 		if (!TextUtils.isEmpty(selection)) {
 			sb.append(" where ");
-			if (selectionArgs == null)
+			if (selectionArgs == null) {
 				sb.append(selection);
-			else {
+			} else {
 				String selectstr = selection;
 				for (int i = 0; i < selectionArgs.length; i++) {
 					selectstr = selectstr.replaceFirst("/?", selectionArgs[i]);

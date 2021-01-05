@@ -1,5 +1,9 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
 import java.util.LinkedHashMap;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -11,8 +15,10 @@ import de.robv.android.xposed.XposedBridge;
 public class Logger {
 
     private String methodName;
-    private String className;
+    private String methodClass;
     private String behaviorName;
+    private String callingClass;
+    private String callingMethod;
     private String tag;
     private LinkedHashMap<String, String> methodArgs = null;
     private LinkedHashMap<String, String> relatedAttrs = null;
@@ -21,10 +27,10 @@ public class Logger {
 
     public Logger() {}
 
-    public Logger(String tag, String methodName, String className, String behaviorName) {
+    public Logger(String tag, String methodName, String methodClass, String behaviorName) {
         this.tag = tag;
         this.methodName = methodName;
-        this.className = className;
+        this.methodClass = methodClass;
         this.behaviorName = behaviorName;
     }
 
@@ -35,7 +41,7 @@ public class Logger {
     public void recordAPICalling(XC_MethodHook.MethodHookParam param, String behaviorName, String... argPairs) {
         methodName = param.method.getName();
         this.behaviorName = behaviorName;
-        className = "";
+        methodClass = param.thisObject.getClass().toString();
         if(methodArgs == null) {
             methodArgs = new LinkedHashMap<>();
         }
@@ -61,8 +67,10 @@ public class Logger {
         sb.append(System.currentTimeMillis()).append(":{");
         sb.append("\"tag\":\"").append(tag).append("\",");
         sb.append("\"behavior\":\"").append(behaviorName).append("\",");
-        if(!"".equals(className)) {
-            sb.append("\"class\":\"").append(className).append("\",");
+        sb.append("\"callingClass\":\"").append(callingClass).append("\",");
+        sb.append("\"callingMethod\":\"").append(callingMethod).append("\",");
+        if(!"".equals(methodClass)) {
+            sb.append("\"methodClass\":\"").append(methodClass).append("\",");
         }
         if(!"".equals(methodName)) {
             sb.append("\"method\":\"").append(methodName).append("\",");
@@ -80,9 +88,17 @@ public class Logger {
         if(relatedAttrs != null && relatedAttrs.size() > 0) {
             sb.append("\"relatedAttrs\":{");
             for (String key : relatedAttrs.keySet()) {
-                sb.append("\"").append(key).append("\":\"")
-                        .append(relatedAttrs.get(key).replace("\"", "\\\""))
-                        .append("\",");
+                sb.append("\"").append(key).append("\":");
+                String value = relatedAttrs.get(key);
+                try {
+                    new Gson().fromJson(value, Object.class);
+                    sb.append(value);
+                } catch (JsonSyntaxException e) {
+                    sb.append("\"")
+                            .append(value.replace("\"", "\\\""))
+                            .append("\"");
+                }
+                sb.append(",");
             }
             sb.delete(sb.length() - 1, sb.length()).append("},");
         }
@@ -93,7 +109,7 @@ public class Logger {
 
     private void clear() {
         methodName = "";
-        className = "";
+        methodClass = "";
         behaviorName = "";
         methodArgs = null;
         relatedAttrs = null;
@@ -101,5 +117,11 @@ public class Logger {
 
     public void logError(Exception e) {
         XposedBridge.log(ERROR + " " + e.getMessage());
+    }
+
+    public void setCallingInfo(String callingInfo) {
+        callingInfo = "".equals(callingInfo) ? "null---null" : callingInfo;
+        callingClass = callingInfo.split("---")[0];
+        callingMethod = callingInfo.split("---")[1];
     }
 }

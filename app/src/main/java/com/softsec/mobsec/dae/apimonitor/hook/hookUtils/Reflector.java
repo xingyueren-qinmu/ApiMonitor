@@ -30,7 +30,7 @@ public class Reflector {
         return Class.forName(className, true, classLoader);
     }
 
-    public static Method findCustomerMethod(String className,
+    public static Method findMethod(String className,
                                     ClassLoader customerLoader,
                                     String methodName,
                                     Object... paramTypes) throws NoSuchMethodException, ClassNotFoundException {

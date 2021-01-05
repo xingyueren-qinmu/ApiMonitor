@@ -19,7 +19,7 @@ public class ActivityThreadHook extends Hook {
 		logger.setTag(TAG);
 		try {
 			@SuppressLint("PrivateApi") Class receiverDataClass = Class.forName("android.app.ActivityThread$ReceiverData");
-			Method handleReceiverMethod = Reflector.findCustomerMethod("android.app.ActivityThread", ClassLoader.getSystemClassLoader(),
+			Method handleReceiverMethod = Reflector.findMethod("android.app.ActivityThread", ClassLoader.getSystemClassLoader(),
 					"handleReceiver", receiverDataClass);
 			methodHookImpl.hookMethod(handleReceiverMethod, new MethodHookCallBack() {
 

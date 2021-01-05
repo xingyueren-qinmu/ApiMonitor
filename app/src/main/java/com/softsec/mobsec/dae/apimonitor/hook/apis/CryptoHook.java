@@ -14,6 +14,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 
@@ -37,8 +38,10 @@ public class CryptoHook extends Hook {
         methodHookImpl.hookMethod(doFinalMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                logger.setCallingInfo(getCallingInfo());
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[]) param.getResult()));
                 logger.recordAPICalling(param, "加/解密行为", "input", Util.byteArrayToString((byte[]) param.args[0]));
+                XposedBridge.log("result:" + Util.byteArrayToString((byte[]) param.getResult()));
             }
         });
 
@@ -78,6 +81,7 @@ public class CryptoHook extends Hook {
         methodHookImpl.hookMethod(pbeKeySpecConstructor, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                logger.setCallingInfo(getCallingInfo());
                 logger.recordAPICalling(param, "PBE秘钥生成",
                         "password", String.valueOf((char[])param.args[0]),
                         "salt", Util.byteArrayToString((byte[])param.args[1]));

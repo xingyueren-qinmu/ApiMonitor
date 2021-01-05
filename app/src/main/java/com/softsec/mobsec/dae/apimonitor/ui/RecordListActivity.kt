@@ -59,19 +59,8 @@ class RecordListActivity : AppCompatActivity() {
         viewList.add(viewTesting)
         viewList.add(viewHistory)
 
-        val testingFolder = File(Config.PATH_TESTING_LOG)
-        val historyFolder = File(Config.PATH_HISTORY_LOG)
-
-        val testingRecordInfos = ArrayList<RecordInfo>()
-        val historyRecordInfos = ArrayList<RecordInfo>()
-
-        testingFolder.walk().filter { it.isFile }
-            .forEach { testingRecordInfos.add(getRecordInfo(it)) }
-        historyFolder.walk().filter { it.isFile }
-            .forEach { historyRecordInfos.add(getRecordInfo(it)) }
-
-        testingRecordInfos.sortByDescending { it.logDate }
-        historyRecordInfos.sortByDescending { it.logDate }
+        val testingRecordInfos = refreshViewList(Config.PATH_TESTING_LOG)
+        val historyRecordInfos = refreshViewList(Config.PATH_HISTORY_LOG)
 
 
         // Init viewpager
@@ -115,10 +104,12 @@ class RecordListActivity : AppCompatActivity() {
                     0 -> {
                         tv_record_testing.setBackgroundColor(Color.LTGRAY)
                         tv_record_history.setBackgroundColor(Color.WHITE)
+                        refreshViewList(Config.PATH_TESTING_LOG)
                     }
                     1 -> {
                         tv_record_testing.setBackgroundColor(Color.WHITE)
                         tv_record_history.setBackgroundColor(Color.LTGRAY)
+                        refreshViewList(Config.PATH_HISTORY_LOG)
                     }
                 }
             }
@@ -171,6 +162,15 @@ class RecordListActivity : AppCompatActivity() {
                 .show()
             true
         }
+    }
+
+    private fun refreshViewList(recordFolderPath: String) : ArrayList<RecordInfo> {
+        val recordFolder = File(recordFolderPath)
+        val recordInfos = ArrayList<RecordInfo>()
+        recordFolder.walk().filter { it.isFile }
+            .forEach { recordInfos.add(getRecordInfo(it)) }
+        recordInfos.sortByDescending { it.logDate }
+        return recordInfos
     }
 
     private fun getRecordInfo(logFile: File): RecordInfo {

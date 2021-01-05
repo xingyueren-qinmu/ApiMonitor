@@ -17,7 +17,7 @@ public class WebViewHook extends Hook {
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 		logger.setTag(TAG);
 		try {
-			Method loadUrlMethod= Reflector.findCustomerMethod("android.webkit.WebView", ClassLoader.getSystemClassLoader(), "loadUrl", String.class);
+			Method loadUrlMethod= Reflector.findMethod("android.webkit.WebView", ClassLoader.getSystemClassLoader(), "loadUrl", String.class);
 			methodHookImpl.hookMethod(loadUrlMethod, new MethodHookCallBack(){
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
