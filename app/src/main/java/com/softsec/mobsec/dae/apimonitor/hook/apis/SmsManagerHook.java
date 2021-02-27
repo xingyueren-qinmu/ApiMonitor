@@ -29,14 +29,20 @@ public class SmsManagerHook extends Hook {
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				String dstNumber = (String)param.args[0];
 				String content = (String)param.args[2];
-				logger.recordAPICalling(param, "发送文本信息", "destNumber", dstNumber, "content", content);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "发送信息", "destNumber", dstNumber, "content", content);
 			}
 		});
 		Method getAllMessagesFromIccmethod = Reflector.findMethod(SmsManager.class, "getAllMessagesFromIcc");
 		methodHookImpl.hookMethod(getAllMessagesFromIccmethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				logger.recordAPICalling(param, "读取本机短信");
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "读取短信");
 			}
 		});
 
@@ -48,7 +54,10 @@ public class SmsManagerHook extends Hook {
 				String dstNumber = (String)param.args[0];
 				Short port = (Short)param.args[2];
 				String content = Base64.encodeToString((byte[]) param.args[3],0);
-				logger.recordAPICalling(param, "发送数据信息", "destNumber", dstNumber, "destPort", port.toString(), "b64Content", content);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "发送信息", "destNumber", dstNumber, "destPort", port.toString(), "b64Content", content);
 
 			}
 		});
@@ -63,7 +72,10 @@ public class SmsManagerHook extends Hook {
 				StringBuilder sb = new StringBuilder();
 				for(int i=0; i<sms.size(); i++)
 					sb.append(sms.get(i));
-				logger.recordAPICalling(param, "发送文本信息", "destNumber", dstNumber, "SMSContent", sb.toString());
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "发送信息", "destNumber", dstNumber, "SMSContent", sb.toString());
 			}
 		});
 	}

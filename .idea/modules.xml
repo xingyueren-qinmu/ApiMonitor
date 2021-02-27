@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" filepath="$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" group="ApiMonitor" />
-      <module fileurl="file://$PROJECT_DIR$/ApiMonitor-SoftSecApiMonitor.iml" filepath="$PROJECT_DIR$/ApiMonitor-SoftSecApiMonitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/DAE-ApiMonitor-SoftSecApiMonitor.iml" filepath="$PROJECT_DIR$/DAE-ApiMonitor-SoftSecApiMonitor.iml" group="SoftSecApiMonitor" />
-      <module fileurl="file://$PROJECT_DIR$/SoftSecApiMonitor.iml" filepath="$PROJECT_DIR$/SoftSecApiMonitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="ApiMonitor/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" filepath="$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApiMonitor.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApiMonitor.app.iml" />
     </modules>
   </component>
 </project>

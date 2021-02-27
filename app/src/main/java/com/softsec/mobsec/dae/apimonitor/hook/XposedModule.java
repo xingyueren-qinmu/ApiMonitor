@@ -54,9 +54,9 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
             return;
         }
 
-        String pkgToHookString = xSP.getString(Config.SP_APPS_TO_HOOK, null);
-        if (pkgToHookString != null) {
-            if(!pkgToHookString.contains(lpparam.packageName)) {
+        String appToHookList = xSP.getString(Config.SP_APPS_TO_HOOK, null);
+        if (appToHookList != null) {
+            if(!appToHookList.contains(lpparam.packageName)) {
                 return;
             }
         } else {
@@ -67,7 +67,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         String absolutePath = xSP.getString(lpparam.packageName + Config.SP_TARGET_APP_LOG_DIR, null);
         XposedBridge.log(absolutePath);
 
-        //Need access to the files
+        // Need access to the files
         File folder = new File(xSP.getString(lpparam.packageName + Config.SP_TARGET_APP_DIR, null));
         folder.setExecutable(true, false);
 
@@ -92,31 +92,32 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 //        new XposedHide().initAllHooks(lpparam);
 
         new CryptoHook().initAllHooks(lpparam);
-        new FileSystemHook().initAllHooks(lpparam);
-        new IPCHook().initAllHooks(lpparam);
+//        new FileSystemHook().initAllHooks(lpparam);
+//        new IPCHook().initAllHooks(lpparam);
         new HttpHook().initAllHooks(lpparam);
-//        new OkHttpHook().initAllHooks(lpparam);
-        new AccountManagerHook().initAllHooks(lpparam);
+        new OkHttpHook().initAllHooks(lpparam);
         new AccountManagerHook().initAllHooks(lpparam);
         new CameraHook().initAllHooks(lpparam);
         new TelephonyManagerHook().initAllHooks(lpparam);
-        new ActivityManagerHook().initAllHooks(lpparam);
-        new ActivityThreadHook().initAllHooks(lpparam);
-        new AudioRecordHook().initAllHooks(lpparam);
+//        new ActivityManagerHook().initAllHooks(lpparam);
+//        new ActivityThreadHook().initAllHooks(lpparam);
+//        new AudioRecordHook().initAllHooks(lpparam);
         new ContentResolverHook().initAllHooks(lpparam);
-        new ContextImplHook().initAllHooks(lpparam);
+//        new ContextImplHook().initAllHooks(lpparam);
         new LocationManagerHook().initAllHooks(lpparam);
-        new MediaRecorderHook().initAllHooks(lpparam);
-        new NotificationManagerHook().initAllHooks(lpparam);
+//        new MediaRecorderHook().initAllHooks(lpparam);
+//        new NotificationManagerHook().initAllHooks(lpparam);
         new PackageManagerHook().initAllHooks(lpparam);
-        new ProcessHook().initAllHooks(lpparam);
-        new RuntimeHook().initAllHooks(lpparam);
+//        new ProcessHook().initAllHooks(lpparam);
+//        new RuntimeHook().initAllHooks(lpparam);
         new SmsManagerHook().initAllHooks(lpparam);
-        new WebViewHook().initAllHooks(lpparam);
-        new CookieManagerHook().initAllHooks(lpparam);
+//        new WebViewHook().initAllHooks(lpparam);
+//        new CookieManagerHook().initAllHooks(lpparam);
         new NetInfoHook().initAllHooks(lpparam);
         new SensorManagerHook().initAllHooks(lpparam);
         new SettingsHook().initAllHooks(lpparam);
+        new NetStreamHook().initAllHooks(lpparam);
+
 
     }
 }

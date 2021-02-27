@@ -21,6 +21,10 @@ public class MediaRecorderHook extends Hook {
 		methodHookImpl.hookMethod(startMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+
 				String mPath = (String)Reflector.getFieldOjbect(MediaRecorder.class, param.thisObject, "mPath");
 				if(mPath != null) logger.recordAPICalling(param, "path", mPath);
 				else {
@@ -35,6 +39,9 @@ public class MediaRecorderHook extends Hook {
 		methodHookImpl.hookMethod(stopMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "结束录音");
 			}
 		});

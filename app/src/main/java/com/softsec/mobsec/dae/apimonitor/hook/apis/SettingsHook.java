@@ -28,6 +28,10 @@ public class SettingsHook extends Hook {
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     if(Settings.Secure.ANDROID_ID.equals((String)param.args[1])) {
+                        String[] callingInfo = getCallingInfo();
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                        logger.addRelatedAttrs("result", (String)param.getResult());
                         logger.recordAPICalling(param, "获取Android ID");
                     }
                 }

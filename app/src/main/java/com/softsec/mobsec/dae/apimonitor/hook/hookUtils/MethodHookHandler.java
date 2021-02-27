@@ -15,4 +15,9 @@ public class MethodHookHandler {
         XposedBridge.hookAllConstructors(clazz, callBack);
     }
 
+    public void hookAllMethods(Class clazz, String methodName, MethodHookCallBack callBack){
+        XposedBridge.hookAllMethods(clazz, methodName, callBack);
+    }
+
+
 }

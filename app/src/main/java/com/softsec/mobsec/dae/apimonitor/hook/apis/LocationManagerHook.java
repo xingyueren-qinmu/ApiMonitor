@@ -1,5 +1,6 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis;
 
+import android.location.Location;
 import android.location.LocationManager;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
@@ -20,7 +21,14 @@ public class LocationManagerHook extends Hook {
         methodHookImpl.hookMethod(getLastKnownLocationMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                logger.recordAPICalling(param, "地理位置获取", "provider", (String)param.args[0]);
+                Location location = (Location)param.getResult();
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                String result = "lat=" + location.getLatitude() +
+                        "&lng=" + location.getLongitude();
+                logger.addRelatedAttrs("result", result);
+                logger.recordAPICalling(param, "获取地理位置", "provider", (String)param.args[0]);
             }
         });
     }

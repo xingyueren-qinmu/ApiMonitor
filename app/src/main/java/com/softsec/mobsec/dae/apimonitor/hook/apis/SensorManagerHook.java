@@ -36,6 +36,9 @@ public class SensorManagerHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取传感器信息",
                         "类型", sensorTypeMap.get((int)param.args[0]));
             }

@@ -132,7 +132,7 @@ class MainService : Service() {
             for (app in apps) {
                 if(app != "") {
                     val appTestingLogFile = File(Config.PATH_TESTING_LOG + app)
-                    val historyFile = File(Config.PATH_HISTORY_LOG + Util.getDate() + "--" + app)
+                    val historyFile = File(Config.PATH_HISTORY_LOG + "apimonitor@" + Util.getDate() + "--" + app)
                     if (appTestingLogFile.exists()) {
                         appTestingLogFile.copyTo(historyFile, false, DEFAULT_BUFFER_SIZE)
                         if(historyFile.exists()) parseLog(historyFile)
@@ -166,7 +166,7 @@ class MainService : Service() {
         var content = sb.toString()
         if(content.endsWith(",")) content = content.substring(0, content.length - 1)
         file.setWritable(true)
-        file.writeText("{\"HookResults\" :{$content}}")
+        file.writeText("{$content}")
     }
 
     override fun onDestroy() {

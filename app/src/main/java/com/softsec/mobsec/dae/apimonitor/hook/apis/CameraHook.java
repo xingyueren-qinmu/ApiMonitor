@@ -27,6 +27,9 @@ public class CameraHook extends Hook {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄照片");
 			}
 
@@ -38,6 +41,9 @@ public class CameraHook extends Hook {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");
 			}
 		});
@@ -48,6 +54,9 @@ public class CameraHook extends Hook {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");
 			}
 		});
@@ -58,6 +67,9 @@ public class CameraHook extends Hook {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");
 			}
 		});

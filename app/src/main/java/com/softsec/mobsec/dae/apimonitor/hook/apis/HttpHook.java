@@ -40,9 +40,11 @@ public class HttpHook extends Hook {
             methodHookImpl.hookAllConstructors(httpUrlConnectionClass, new MethodHookCallBack() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    logger.setCallingInfo(getCallingInfo());
+                    String[] callingInfo = getCallingInfo();
+                    logger.setCallingInfo(callingInfo[0]);
+                    logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     if (param.args.length == 1 && param.args[0].getClass() == URL.class) {
-                        logger.recordAPICalling(param, "通过URL建立网络连接",  "URL", param.args[0].toString());
+                        logger.recordAPICalling(param, "网络通信",  "url", param.args[0].toString());
                     }
                 }
             });
@@ -55,7 +57,10 @@ public class HttpHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 URL url = (URL)param.thisObject;
-                logger.recordAPICalling(param, "通过URL建立网络连接", "URL", url.toString());
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                logger.recordAPICalling(param, "网络通信", "url", url.toString());
             }
         });
 

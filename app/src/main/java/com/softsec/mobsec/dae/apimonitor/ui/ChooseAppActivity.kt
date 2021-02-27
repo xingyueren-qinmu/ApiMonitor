@@ -91,7 +91,7 @@ class ChooseAppActivity : AppCompatActivity() {
             SharedPreferencesUtil.remove(Config.SP_APPS_TO_HOOK)
             SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, sb.toString())
             sb.clear()
-            for (pkgName in removedApp){
+            for (pkgName in removedApp) {
                 sb.append(pkgName).append(";")
             }
             SharedPreferencesUtil.put(Config.SP_EX_APPS_TO_HOOK, sb.toString())
@@ -131,7 +131,7 @@ class ChooseAppActivity : AppCompatActivity() {
     }
 
     private fun queryFilterAppInfo() : List<AppInfo> {
-        // 加一个转圈圈
+        // Todo 加一个转圈圈
         val listApplications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             packageManager.getInstalledApplications(PackageManager.MATCH_UNINSTALLED_PACKAGES)
         } else {

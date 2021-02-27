@@ -24,6 +24,9 @@ public class NetInfoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取Mac地址");
             }
         });
@@ -33,7 +36,10 @@ public class NetInfoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                logger.recordAPICalling(param, "获取Wifi ip地址");
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                logger.recordAPICalling(param, "获取Wifi IP");
             }
         });
 
@@ -42,6 +48,9 @@ public class NetInfoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取Wifi SSID");
             }
         });
@@ -51,6 +60,9 @@ public class NetInfoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取Wifi BSSID");
             }
         });
@@ -60,7 +72,10 @@ public class NetInfoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                logger.recordAPICalling(param, "获取移动网络ip地址");
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                logger.recordAPICalling(param, "获取移动网络IP地址");
             }
         });
 

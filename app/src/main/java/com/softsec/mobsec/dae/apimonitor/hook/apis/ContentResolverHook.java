@@ -3,6 +3,7 @@ package com.softsec.mobsec.dae.apimonitor.hook.apis;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -51,7 +52,20 @@ public class ContentResolverHook extends Hook {
 				if (!"".equals(privacyType)) {
 					String queryStr = concatenateQuery(uri, (String[]) param.args[1], (String) param.args[2], (String[]) param.args[3],
 							(String) param.args[4]);
-					logger.recordAPICalling(param, "查询本机数据",
+					String[] callingInfo = getCallingInfo();
+					Cursor cursor = (Cursor)(param.getResult());
+					StringBuilder sb = new StringBuilder();
+					while(cursor.moveToNext()) {
+						int len = cursor.getColumnCount();
+						for(int i = 0; i < len; i++) {
+							sb.append(cursor.getString(i)).append(',');
+						}
+						sb.append(';');
+					}
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					logger.addRelatedAttrs("result", sb.toString());
+					logger.recordAPICalling(param, "本机数据库查询",
 							"数据类型", privacyType,
 							"URI", uri.toString(),
 							"querySQL", queryStr);
@@ -67,6 +81,9 @@ public class ContentResolverHook extends Hook {
 				Uri uri = (Uri) param.args[0];
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param,
 						"监听本机数据",
 							"数据类型", privacyType,
@@ -85,7 +102,10 @@ public class ContentResolverHook extends Hook {
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String insertStr = concatenateInsert(uri, (ContentValues) param.args[1]);
-					logger.recordAPICalling(param, "向本机数据库添加数据",
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					logger.recordAPICalling(param, "本机数据库添加",
 							"类型", privacyType,
 							"URI", uri.toString(),
 							"insertSQL", insertStr);
@@ -103,7 +123,10 @@ public class ContentResolverHook extends Hook {
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String deleteStr = concatenateDelete(uri, (String) param.args[1], (String[]) param.args[2]);
-					logger.recordAPICalling(param, "删除数据库数据",
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					logger.recordAPICalling(param, "本机数据库删除",
 							"数据类型", privacyType,
 							"URI", uri.toString(),
 							"deleteSQL", deleteStr);
@@ -121,7 +144,10 @@ public class ContentResolverHook extends Hook {
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String updateStr = concatenateUpdate(uri, (ContentValues) param.args[1], (String) param.args[2], (String[]) param.args[3]);
-					logger.recordAPICalling(param, "更新数据库数据",
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					logger.recordAPICalling(param, "本机数据库修改",
 							"数据类型", privacyType,
 							"URI", uri.toString(),
 							"updateSQL", updateStr);

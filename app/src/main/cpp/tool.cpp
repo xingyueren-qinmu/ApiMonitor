@@ -143,8 +143,9 @@ int main(int argc,char *argv[]) {
     string *fileLines = nullptr;
     for(int i = 1; i < argc; i += 2) {
         if(!strcmp(argv[i], "-a")||!strcmp(argv[i], "--add")) {
-            if(argc <= i + 2 || strcmp(argv[i + 2], "--logdir"))
+            if(argc <= i + 2 || strcmp(argv[i + 2], "--logdir")) {
                 output(ERROR, "Need to specify logdir, use --logdir PATH.");
+            }
             else {
                 ReadFile(fileLines, appLineNum, lineSize, exLine);
                 AddPkgName((string) argv[i + 1], (string) argv[i + 3], fileLines, appLineNum, lineSize);

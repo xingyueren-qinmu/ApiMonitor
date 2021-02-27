@@ -57,7 +57,9 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                     if(((File)param.thisObject).isFile()) {
-                        logger.setCallingInfo(getCallingInfo());
+                        String[] callingInfo = getCallingInfo();
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件", "filepath", filePath);
                     }
             }
@@ -74,7 +76,9 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                      if(((File)param.thisObject).isFile()) {
-                         logger.setCallingInfo(getCallingInfo());
+                         String[] callingInfo = getCallingInfo();
+                         logger.setCallingInfo(callingInfo[0]);
+                         logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                          logger.recordAPICalling(param, "打开文件", "filedir", filedir, "filename", fileName);
                      }
             }
@@ -91,7 +95,9 @@ public class FileSystemHook extends Hook {
                     if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
-                        logger.setCallingInfo(getCallingInfo());
+                        String[] callingInfo = getCallingInfo();
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件",
                             "filedir", fileDir.getAbsolutePath(),
                                     "filename", fileName);
@@ -111,7 +117,9 @@ public class FileSystemHook extends Hook {
                     if (uri.toString().contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
-                        logger.setCallingInfo(getCallingInfo());
+                        String[] callingInfo = getCallingInfo();
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件", "uri", uri.toString());
                     }
                 }

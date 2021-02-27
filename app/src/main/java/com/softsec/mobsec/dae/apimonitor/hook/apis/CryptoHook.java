@@ -6,6 +6,7 @@ import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 import com.softsec.mobsec.dae.apimonitor.util.Util;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.SecureRandom;
 
@@ -23,7 +24,7 @@ public class CryptoHook extends Hook {
     public static final String TAG = "DAEAM_Crypto";
 
     @Override
-    public  void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
+    public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
         logger.setTag(TAG);
 
         Constructor secretKeySpecConstructor = Reflector.findConstructor(SecretKeySpec.class, byte[].class, String.class);
@@ -38,8 +39,14 @@ public class CryptoHook extends Hook {
         methodHookImpl.hookMethod(doFinalMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                logger.setCallingInfo(getCallingInfo());
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                Field opmodeField = Cipher.class.getDeclaredField("opmode");
+                opmodeField.setAccessible(true);
+                int opmode = (int) opmodeField.get((Cipher)(param.thisObject));
+                logger.addRelatedAttrs("opmode", opmode == Cipher.ENCRYPT_MODE ? "Encrypt" : "Decrypt");
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[]) param.getResult()));
+                logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "加/解密行为", "input", Util.byteArrayToString((byte[]) param.args[0]));
                 XposedBridge.log("result:" + Util.byteArrayToString((byte[]) param.getResult()));
             }
@@ -81,7 +88,9 @@ public class CryptoHook extends Hook {
         methodHookImpl.hookMethod(pbeKeySpecConstructor, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                logger.setCallingInfo(getCallingInfo());
+                String[] callingInfo = getCallingInfo();
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "PBE秘钥生成",
                         "password", String.valueOf((char[])param.args[0]),
                         "salt", Util.byteArrayToString((byte[])param.args[1]));

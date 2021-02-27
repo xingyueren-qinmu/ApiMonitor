@@ -1,5 +1,7 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis;
 
+import android.os.Build;
+import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
@@ -26,6 +28,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.addRelatedAttrs("result", (String)param.getResult());
 				logger.recordAPICalling(param, "获取本机号码");
 			}
 		});
@@ -53,6 +59,9 @@ public class TelephonyManagerHook extends Hook {
 				if((eventNo & PhoneStateListener.LISTEN_CELL_LOCATION) != 0){
 					eventStr = "LISTEN_SERVICE_STATE";
 				}
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "监听手机信息",
 						"PhoneStateListener", param.args[0].getClass().getName(),
 						"ListeningEvent", eventStr);
@@ -65,6 +74,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.addRelatedAttrs("result", (String)param.getResult());
 				logger.recordAPICalling(param, "获取设备ID");
 			}
 		});
@@ -76,6 +89,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.addRelatedAttrs("result", (String)param.getResult());
 				logger.recordAPICalling(param, "获取Sim卡MSI");
 			}
 		});
@@ -86,7 +103,11 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				logger.recordAPICalling(param, "获取基站位置信息");
+				String[] callingInfo = getCallingInfo();
+				CellLocation location = (CellLocation)param.getResult();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "获取基站位置");
 			}
 		});
 
@@ -96,6 +117,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "获取系统ID");
 			}
 		});
@@ -107,6 +132,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "获取网络服务种类");
 			}
 		});
@@ -117,6 +146,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "获取基站ID");
 			}
 		});
@@ -127,6 +160,10 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "获取GSM原件ID");
 			}
 		});
@@ -138,7 +175,11 @@ public class TelephonyManagerHook extends Hook {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				logger.recordAPICalling(param, "获取地理位置信息");
+				String[] callingInfo = getCallingInfo();
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+				logger.recordAPICalling(param, "获取地理位置");
 			}
 		});
 
@@ -149,21 +190,30 @@ public class TelephonyManagerHook extends Hook {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					super.afterHookedMethod(param);
-					logger.recordAPICalling(param, "获取运营商信息");
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					logger.recordAPICalling(param, "获取运营商");
 				}
 			});
 		}
 
 		// 获得运营商信息
-		Method getSimCarrierIdNameMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierIdName");
-		if(getSimCarrierIdNameMethod != null) {
-			methodHookImpl.hookMethod(getSimCarrierIdNameMethod, new MethodHookCallBack() {
-				@Override
-				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					super.afterHookedMethod(param);
-					logger.recordAPICalling(param, "获取运营商信息");
-				}
-			});
+		if(Build.VERSION.SDK_INT >= 28) {
+			Method getSimCarrierIdNameMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierIdName");
+			if(getSimCarrierIdNameMethod != null) {
+				methodHookImpl.hookMethod(getSimCarrierIdNameMethod, new MethodHookCallBack() {
+					@Override
+					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+						super.afterHookedMethod(param);
+						String[] callingInfo = getCallingInfo();
+						logger.setCallingInfo(callingInfo[0]);
+						logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+						logger.recordAPICalling(param, "获取运营商");
+					}
+				});
+			}
 		}
 
 	}
