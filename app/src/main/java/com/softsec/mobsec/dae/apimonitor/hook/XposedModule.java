@@ -4,10 +4,19 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.softsec.mobsec.dae.apimonitor.hook.apis.*;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.HttpHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.NetStreamHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.OkHttpHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketMonitor;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketPackEvent;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.observer.EventObserver;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.util.Config;
 import com.softsec.mobsec.dae.apimonitor.util.FileUtil;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
@@ -86,37 +95,87 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
                 });
         startAllHooks(lpparam);
     }
+    
+    private void setupSocketMonitor() {
+        SocketMonitor.setPacketEventObserver(socketPackEvent -> {
+            int localPort = socketPackEvent.socket.getLocalPort();
+            int desport = socketPackEvent.socket.getPort();
+            InetAddress inetAddress = socketPackEvent.socket.getInetAddress();
+
+            String desip;
+            if (inetAddress != null) {
+                desip = inetAddress.getHostAddress();
+            } else {
+                desip = socketPackEvent.socket.toString();
+            }
+
+            Logger logger = new Logger();
+            logger.setTag("Socket Hook");
+            StringBuilder headerBuilder = new StringBuilder();
+            String type = socketPackEvent.readAndWrite == SocketMonitor.statusRead ? "response" : "request";
+            logger.addRelatedAttrs("type", type);
+            logger.addRelatedAttrs("desip", desip);
+            logger.addRelatedAttrs("desport", String.valueOf(desport));
+            logger.addRelatedAttrs("protocal", socketPackEvent.isHttp ? "HTTP" : "OTHER");
+
+            try {
+                XposedBridge.log(headerBuilder.toString());
+                if (!socketPackEvent.isHttp) {
+//                        printStream.write(socketPackEvent.body);
+                    logger.addRelatedAttrs(type + "_raw", new String(socketPackEvent.body));
+                } else {
+                    //先写头部数据
+                    logger.addRelatedAttrs("header", new String(socketPackEvent.httpHeaderContent));
+
+                    //body数据，可能没有，而且可能存在分段压缩之类的
+                    if (socketPackEvent.needDecodeHttpBody()) {
+                        byte[] httpBodyContent = socketPackEvent.httpBodyContent;
+                        if (socketPackEvent.charset != null && socketPackEvent.charset != StandardCharsets.UTF_8) {
+                            httpBodyContent = new String(httpBodyContent, socketPackEvent.charset).getBytes(StandardCharsets.UTF_8);
+                        }
+                        XposedBridge.log(new String(httpBodyContent));
+
+
+                    }
+                }
+                XposedBridge.log("\n");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 
     private void startAllHooks(XC_LoadPackage.LoadPackageParam lpparam) {
 //        new XposedHide().initAllHooks(lpparam);
 
-        new CryptoHook().initAllHooks(lpparam);
+//        new CryptoHook().initAllHooks(lpparam);
 //        new FileSystemHook().initAllHooks(lpparam);
 //        new IPCHook().initAllHooks(lpparam);
-        new HttpHook().initAllHooks(lpparam);
-        new OkHttpHook().initAllHooks(lpparam);
-        new AccountManagerHook().initAllHooks(lpparam);
-        new CameraHook().initAllHooks(lpparam);
-        new TelephonyManagerHook().initAllHooks(lpparam);
+//        new HttpHook().initAllHooks(lpparam);
+//        new OkHttpHook().initAllHooks(lpparam);
+//        new AccountManagerHook().initAllHooks(lpparam);
+//        new CameraHook().initAllHooks(lpparam);
+//        new TelephonyManagerHook().initAllHooks(lpparam);
 //        new ActivityManagerHook().initAllHooks(lpparam);
 //        new ActivityThreadHook().initAllHooks(lpparam);
 //        new AudioRecordHook().initAllHooks(lpparam);
-        new ContentResolverHook().initAllHooks(lpparam);
+//        new ContentResolverHook().initAllHooks(lpparam);
 //        new ContextImplHook().initAllHooks(lpparam);
-        new LocationManagerHook().initAllHooks(lpparam);
+//        new LocationManagerHook().initAllHooks(lpparam);
 //        new MediaRecorderHook().initAllHooks(lpparam);
 //        new NotificationManagerHook().initAllHooks(lpparam);
-        new PackageManagerHook().initAllHooks(lpparam);
+//        new PackageManagerHook().initAllHooks(lpparam);
 //        new ProcessHook().initAllHooks(lpparam);
 //        new RuntimeHook().initAllHooks(lpparam);
-        new SmsManagerHook().initAllHooks(lpparam);
+//        new SmsManagerHook().initAllHooks(lpparam);
 //        new WebViewHook().initAllHooks(lpparam);
 //        new CookieManagerHook().initAllHooks(lpparam);
-        new NetInfoHook().initAllHooks(lpparam);
-        new SensorManagerHook().initAllHooks(lpparam);
-        new SettingsHook().initAllHooks(lpparam);
-        new NetStreamHook().initAllHooks(lpparam);
+//        new NetInfoHook().initAllHooks(lpparam);
+//        new SensorManagerHook().initAllHooks(lpparam);
+//        new SettingsHook().initAllHooks(lpparam);
+//        new NetStreamHook().initAllHooks(lpparam);
+        setupSocketMonitor();
 
 
     }

@@ -69,8 +69,10 @@ public class Util {
             dos.writeBytes("exit\n");
             dos.flush();
             String line;
-            while ((line = scanner.nextLine()) != null) {
-                result.append(line);
+            if(scanner.hasNext()) {
+                while ((line = scanner.nextLine()) != null) {
+                    result.append(line);
+                }
             }
             p.waitFor();
         } catch (Exception e) {
