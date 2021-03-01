@@ -8,6 +8,7 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.for
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.formatter.HttpBaseFormatter;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.formatter.HttpChunckAggregateFormatter;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.observer.EventObserver;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -191,7 +192,7 @@ public class SocketMonitor {
             }
         });
 
-        try {
+        if(Reflector.findMethod(socketClass, "close") != null) {
             XposedHelpers.findAndHookMethod(socketClass, "close", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -199,8 +200,6 @@ public class SocketMonitor {
                     socketMonitor.destroy();
                 }
             });
-        } catch (Exception e) {
-            XposedBridge.log("Error:" + e.getMessage());
         }
     }
 
