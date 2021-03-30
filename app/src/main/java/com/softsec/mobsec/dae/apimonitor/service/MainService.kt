@@ -158,21 +158,29 @@ class MainService : Service() {
     }
 
     private fun parseLog(file : File) {
-        val sb = StringBuffer()
-        file.forEachLine { line ->
-            //if(line.endsWith("\n")) line.substring(0, line.length - 1) else
-            sb.append(line)
+        val tmp = File(file.parent + "/tmp")
+        var size = -1
+        tmp.writeText("{")
+        val reader = file.bufferedReader()
+        var buffer = CharArray(4 * 1024)
+        while(reader.read(buffer).also { size = it } != -1) {
+            var string = String(buffer).substring(0, size)
+            if(size < 4 * 1024) {
+                string = string.substring(0, string.lastIndexOf(","))
+            }
+            tmp.appendText(string)
         }
-        var content = sb.toString()
-        if(content.endsWith(",")) content = content.substring(0, content.length - 1)
-        file.setWritable(true)
-        file.writeText("{$content}")
+        reader.close()
+        tmp.appendText("}")
+        tmp.copyTo(file, overwrite = true, bufferSize = 4 * 1024)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopForeground(true)
     }
+
+
     inner class MainServiceBinder : Binder() {
 
         fun uploadRecord(recordPath: String) {
@@ -197,4 +205,3 @@ class MainService : Service() {
     }
 
 }
-

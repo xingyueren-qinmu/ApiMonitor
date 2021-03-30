@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" filepath="$PROJECT_DIR$/.idea/modules/ApiMonitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApiMonitor.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApiMonitor.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Apimonitor.iml" filepath="$PROJECT_DIR$/.idea/Apimonitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Apimonitor.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Apimonitor.app.iml" />
     </modules>
   </component>
 </project>
