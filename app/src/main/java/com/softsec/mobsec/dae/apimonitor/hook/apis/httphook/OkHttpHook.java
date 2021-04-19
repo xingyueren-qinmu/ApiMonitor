@@ -322,8 +322,6 @@ public class OkHttpHook extends Hook {
 
                     //入参
                     Object arg = param.args[0];  //this.originalRequest
-                    XposedBridge.log("wxx1");
-                    XposedBridge.log(arg.toString());
 
 
 //                    StringBuilder sbRequest = new StringBuilder();

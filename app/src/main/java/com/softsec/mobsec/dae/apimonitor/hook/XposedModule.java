@@ -96,7 +96,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         startAllHooks(lpparam);
     }
     
-    private void setupSocketMonitor() {
+    private void setupSocketMonitor(XC_LoadPackage.LoadPackageParam lpparam) {
         SocketMonitor.setPacketEventObserver(socketPackEvent -> {
             int localPort = socketPackEvent.socket.getLocalPort();
             int desport = socketPackEvent.socket.getPort();
@@ -122,7 +122,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
                 XposedBridge.log(headerBuilder.toString());
                 if (!socketPackEvent.isHttp) {
 //                        printStream.write(socketPackEvent.body);
-                    logger.addRelatedAttrs(type + "_raw", new String(socketPackEvent.body));
+//                    logger.addRelatedAttrs(type + "_raw", new String(socketPackEvent.body));
                 } else {
                     //先写头部数据
                     logger.addRelatedAttrs("header", new String(socketPackEvent.httpHeaderContent));
@@ -142,6 +142,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            logger.recordAPICalling("Socket通信");
         });
     }
 
@@ -150,7 +151,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new XposedHide().initAllHooks(lpparam);
 
         new CryptoHook().initAllHooks(lpparam);
-        new FileSystemHook().initAllHooks(lpparam);
+//        new FileSystemHook().initAllHooks(lpparam);
         new IPCHook().initAllHooks(lpparam);
         new HttpHook().initAllHooks(lpparam);
         new OkHttpHook().initAllHooks(lpparam);
@@ -175,9 +176,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new SensorManagerHook().initAllHooks(lpparam);
         new SettingsHook().initAllHooks(lpparam);
         new NetStreamHook().initAllHooks(lpparam);
-        setupSocketMonitor();
-
-
+        setupSocketMonitor(lpparam);
     }
 }
 

@@ -52,7 +52,22 @@ public class Logger {
         generateLog();
     }
 
-    public void recordAPICallingAdd(String behaviorName, String... argPairs) {
+    public void recordAPICalling(String behaviorName, String... argPairs) {
+        methodName = "";
+        this.behaviorName = behaviorName;
+        methodClass = "";
+        if(methodArgs == null) {
+            methodArgs = new LinkedHashMap<>();
+        }
+        if(argPairs.length > 0) {
+            for(int i = 0; i < argPairs.length; i += 2) {
+                methodArgs.put(argPairs[i], argPairs[i + 1]);
+            }
+        }
+        generateLog();
+    }
+
+        public void recordAPICallingAdd(String behaviorName, String... argPairs) {
         methodName = "";
         this.behaviorName = behaviorName;
         methodClass = "";

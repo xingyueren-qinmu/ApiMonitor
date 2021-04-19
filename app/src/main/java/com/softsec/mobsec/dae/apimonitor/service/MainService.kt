@@ -21,6 +21,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Call
 import okhttp3.MultipartBody
 import okhttp3.Response
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.lang.StringBuilder
@@ -157,23 +158,34 @@ class MainService : Service() {
         }
     }
 
+//    private fun parseLog(file : File) {
+//        val tmp = File(file.parent + "/tmp")
+//        synchronized(tmp) {
+//            var size = -1
+//            tmp.writeText("{")
+//            val reader = file.bufferedReader()
+//            var buffer = CharArray(4 * 1024)
+//            while(reader.read(buffer).also { size = it } != -1) {
+//                var string = String(buffer).substring(0, size)
+//                if(size < 4 * 1024) {
+//                    string = string.substring(0, string.lastIndexOf(","))
+//                }
+//                tmp.appendText(string)
+//            }
+//            reader.close()
+//            tmp.appendText("}")
+//            tmp.copyTo(file, overwrite = true, bufferSize = 4 * 1024)
+//        }
+//    }
+
     private fun parseLog(file : File) {
-        val tmp = File(file.parent + "/tmp")
-        var size = -1
-        tmp.writeText("{")
-        val reader = file.bufferedReader()
-        var buffer = CharArray(4 * 1024)
-        while(reader.read(buffer).also { size = it } != -1) {
-            var string = String(buffer).substring(0, size)
-            if(size < 4 * 1024) {
-                string = string.substring(0, string.lastIndexOf(","))
-            }
-            tmp.appendText(string)
-        }
-        reader.close()
-        tmp.appendText("}")
-        tmp.copyTo(file, overwrite = true, bufferSize = 4 * 1024)
+        val sb = StringBuilder("{")
+        sb.append(file.bufferedReader().use(BufferedReader::readText))
+        sb.setCharAt(sb.length - 1, '}');
+//        file.writeText(sb.toString())
+        file.bufferedWriter(bufferSize = 4 * 1024).write(sb.toString())
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
