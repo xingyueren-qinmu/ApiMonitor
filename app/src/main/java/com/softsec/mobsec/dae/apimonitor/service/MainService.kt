@@ -53,7 +53,7 @@ class MainService : Service() {
                 connectServer()
             }
             else {
-                Timer().schedule(0, 2000) {
+                Timer().schedule(0, 5000) {
                     copyLog()
                 }
             }
@@ -183,7 +183,7 @@ class MainService : Service() {
         sb.append(file.bufferedReader().use(BufferedReader::readText))
         sb.setCharAt(sb.length - 1, '}');
 //        file.writeText(sb.toString())
-        file.bufferedWriter(bufferSize = 4 * 1024).write(sb.toString())
+        file.bufferedWriter().write(sb.toString())
     }
 
 
