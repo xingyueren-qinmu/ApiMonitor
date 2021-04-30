@@ -137,7 +137,7 @@ class MainService : Service() {
                     if (appTestingLogFile.exists()) {
                         appTestingLogFile.copyTo(historyFile, false, DEFAULT_BUFFER_SIZE)
                         if(historyFile.exists()) parseLog(historyFile)
-                        appTestingLogFile.delete()
+//                        appTestingLogFile.delete()
                     }
                     val appLogFile = File(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_LOG_DIR))
                     if (appLogFile.exists()) {
@@ -180,10 +180,12 @@ class MainService : Service() {
 
     private fun parseLog(file : File) {
         val sb = StringBuilder("{")
-        sb.append(file.bufferedReader().use(BufferedReader::readText))
-        sb.setCharAt(sb.length - 1, '}');
+        val logStr = file.bufferedReader().use(BufferedReader::readText)
+        sb.append(logStr.substring(0, logStr.length - 2))
+        sb.substring(0, sb.length - 2)
+        sb.append('}')
 //        file.writeText(sb.toString())
-        file.bufferedWriter().write(sb.toString())
+        file.writeText(sb.toString())
     }
 
 
