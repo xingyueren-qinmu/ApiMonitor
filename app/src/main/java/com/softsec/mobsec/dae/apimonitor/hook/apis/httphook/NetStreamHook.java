@@ -74,6 +74,7 @@ public class NetStreamHook extends Hook {
                     logger.recordAPICalling(param, "Socket响应",
                             "code", result.get("code"),
                             "url", result.get("url"),
+                            "host", result.get("Host"),
                             "response_size", result.get("Content-Length"));
                 }
             });
@@ -93,7 +94,7 @@ public class NetStreamHook extends Hook {
         for(String s : strings){
             if(s.contains(":")){
                 String key = s.split(":")[0].replace(" ","");
-                String value = s.split(":")[1].replace(" ","");
+                String value = s.split(":")[1].replace(" ","").replace("\r","");
                 if(key.equals("Host")){
                     header.put(key, value);
                 }else if(key.equals("Content-Length")){
@@ -116,17 +117,24 @@ public class NetStreamHook extends Hook {
         Map<String, String> result = new HashMap<String, String>();
         String[] strings = rawString.split("\n");
 
-        result.put("url","unknown");
-
         String[] firstLine = strings[0].split("\\s");
         if(firstLine.length > 1){
-            result.put("code",firstLine[1]);
+            if(firstLine[1].startsWith("http")){
+                result.put("url",firstLine[1]);
+            }else if(firstLine[1].contains(":")){
+                String[] hostToCode = firstLine[1].split(":");
+                if(hostToCode.length == 2){
+                    result.put("Host", hostToCode[0]);
+                }
+            }else{
+                result.put("code", firstLine[1]);
+            }
         }
 
         for(String s : strings){
             if(s.contains(":")){
                 String key = s.split(":")[0].replace(" ", "");
-                String value = s.split(":")[1].replace(" ", "");
+                String value = s.split(":")[1].replace(" ", "").replace("\r","");
                 if(key.equals("Content-Length")){
                     result.put("Content-Length", value);
                     return result;

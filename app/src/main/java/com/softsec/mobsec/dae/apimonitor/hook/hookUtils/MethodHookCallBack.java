@@ -1,6 +1,7 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +36,7 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
 
         String builtInPkgRegex = "^(android\\.|com\\.google\\.android\\.|dalvik\\.|java\\.|javax\\." +
                 "|junit\\.|org\\.apache\\.http\\.|org\\.json\\.|org\\.w3c\\.|org\\.xml\\.|org\\.xmlpull\\." +
-                "|kotlin\\.|kotlinx\\.|com\\.android\\.|okhttp3\\.)";
+                "|kotlin\\.|kotlinx\\.|com\\.android\\.|okhttp3\\.|okio\\.)";
         Pattern patternOri = Pattern.compile(builtInPkgRegex);
 
         String filterPkgRegex = "^(de\\.robv\\.android\\.xposed|" +
@@ -60,10 +61,7 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
                     Matcher matcherOri = patternOri.matcher(st.getClassName());
                     // 过滤掉Android自己的API，剩下第三方sdk包和应用自己的包
                     if(!matcherOri.find() && result[0].equals("")){
-                        String[] strSplits = st.getClassName().split("\\.");
-                        if(strSplits.length > 0){
-                            result[0] = st.getClassName().replace(strSplits[strSplits.length-1],"") + "---" + st.getMethodName();
-                        }
+                        result[0] = st.getClassName() + "---" + st.getMethodName();
                     }
 
                 }
