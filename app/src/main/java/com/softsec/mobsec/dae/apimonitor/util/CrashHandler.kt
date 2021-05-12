@@ -2,6 +2,7 @@ package com.softsec.mobsec.dae.apimonitor.util
 
 import android.annotation.SuppressLint
 import java.io.File
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -9,7 +10,9 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
 
     private val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
     @SuppressLint("SimpleDateFormat")
-    private val sdf = SimpleDateFormat("yyyy-MM-dd")
+    private val daySDF = SimpleDateFormat("yyyy-MM-dd")
+    @SuppressLint("SimpleDateFormat")
+    private val secondSDF = SimpleDateFormat("HH:mm:ss")
 
     fun init() {
         Thread.setDefaultUncaughtExceptionHandler(this)
@@ -20,8 +23,17 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
         if(!exceptionLogDir.exists()) {
             exceptionLogDir.mkdirs()
         }
-        FileUtil.writeToFile("$thread, ${throwable.message}",
-            "${Config.PATH_EXCEPTION_LOG}${sdf.format(Date())}.log")
+        FileUtil.writeToFile("${secondSDF.format(Date())}-${thread}, ${formatThrowable(throwable)}",
+            "${Config.PATH_EXCEPTION_LOG}${daySDF.format(Date())}.log")
         defaultHandler?.uncaughtException(thread, throwable)
+    }
+
+    private fun formatThrowable(throwable: Throwable): String {
+        val sb = StringBuilder();
+        for(st in throwable.stackTrace) {
+            sb.append(st.className).append("->").append(st.methodName).append("[${st.lineNumber}]")
+                .append("\n")
+        }
+        return sb.toString()
     }
 }

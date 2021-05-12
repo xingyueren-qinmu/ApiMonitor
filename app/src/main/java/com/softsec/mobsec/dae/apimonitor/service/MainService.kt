@@ -22,6 +22,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile
+import java.lang.Exception
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.concurrent.schedule
@@ -115,11 +116,16 @@ class MainService : Service() {
             for (app in apps) {
                 val appLogFile = File(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_LOG_DIR))
                 if (appLogFile.exists()) {
-                    if (File(Config.PATH_TESTING_LOG).exists()) {
-                        appLogFile.copyTo(File(Config.PATH_TESTING_LOG + app), true, DEFAULT_BUFFER_SIZE)
-                    } else {
+                    if (!File(Config.PATH_TESTING_LOG).exists()) {
                         File(Config.PATH_TESTING_LOG).mkdirs()
                         File(Config.PATH_HISTORY_LOG).mkdirs()
+                    }
+                    try {
+                        appLogFile.copyTo(File(Config.PATH_TESTING_LOG + app), true, DEFAULT_BUFFER_SIZE)
+                    } catch (e: Exception) {
+                        e.printStackTrace();
+                    } finally {
+                        Thread.sleep(5 * 1000)
                         appLogFile.copyTo(File(Config.PATH_TESTING_LOG + app), true, DEFAULT_BUFFER_SIZE)
                     }
                 }
