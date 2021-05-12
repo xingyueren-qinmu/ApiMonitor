@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
         <activity android:name="com.softsec.mobsec.dae.apimonitor.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

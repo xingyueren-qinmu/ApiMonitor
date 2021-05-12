@@ -12,10 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import com.softsec.mobsec.dae.apimonitor.R
 import com.softsec.mobsec.dae.apimonitor.ui.MainActivity
-import com.softsec.mobsec.dae.apimonitor.util.Config
-import com.softsec.mobsec.dae.apimonitor.util.HttpUtil
-import com.softsec.mobsec.dae.apimonitor.util.SharedPreferencesUtil
-import com.softsec.mobsec.dae.apimonitor.util.Util
+import com.softsec.mobsec.dae.apimonitor.util.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Call
@@ -24,6 +21,7 @@ import okhttp3.Response
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
+import java.io.RandomAccessFile
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.concurrent.schedule
@@ -136,8 +134,10 @@ class MainService : Service() {
                     val historyFile = File(Config.PATH_HISTORY_LOG + "apimonitor@" + Util.getDate() + "--" + app)
                     if (appTestingLogFile.exists()) {
                         appTestingLogFile.copyTo(historyFile, false, DEFAULT_BUFFER_SIZE)
-                        if(historyFile.exists()) parseLog(historyFile)
-//                        appTestingLogFile.delete()
+                        if(historyFile.exists()) {
+                            FileUtil.writeToFile("}", historyFile.absolutePath)
+                        }
+                        appTestingLogFile.delete()
                     }
                     val appLogFile = File(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_LOG_DIR))
                     if (appLogFile.exists()) {
@@ -179,16 +179,6 @@ class MainService : Service() {
 //            tmp.copyTo(file, overwrite = true, bufferSize = 4 * 1024)
 //        }
 //    }
-
-    private fun parseLog(file : File) {
-        val sb = StringBuilder("{")
-        val logStr = file.bufferedReader().use(BufferedReader::readText)
-        sb.append(logStr.substring(0, logStr.length - 2))
-        sb.substring(0, sb.length - 2)
-        sb.append('}')
-//        file.writeText(sb.toString())
-        file.writeText(sb.toString())
-    }
 
 
     override fun onDestroy() {

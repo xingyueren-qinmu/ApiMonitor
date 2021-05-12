@@ -174,7 +174,7 @@ public class Logger {
         JsonObject res = new JsonObject();
         res.add(String.valueOf(System.currentTimeMillis()), json);
         String s = res.toString();
-        XposedBridge.log(s.substring(1, s.length() - 1) + ',');
+        XposedBridge.log("," + s.substring(1, s.length() - 1));
         clear();
     }
 

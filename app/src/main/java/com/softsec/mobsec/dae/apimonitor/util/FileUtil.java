@@ -23,32 +23,42 @@ public class FileUtil {
     public static void writeToFile(String log, String absolutePath) {
 
         try {
-        File file = new File(absolutePath);
+            File file = new File(absolutePath);
 
-        if (!file.exists()) {
+            boolean f = false;
 
-            File path = new File(String.valueOf(file.getParentFile()));
-            path.setReadable(true, false);
-            path.setExecutable(true, false);
-            path.setWritable(true, false);
+            if (!file.exists()) {
 
-            path.mkdirs();
-            path.setReadable(true, false);
-            path.setExecutable(true, false);
-            path.setWritable(true, false);
+                File path = new File(String.valueOf(file.getParentFile()));
+                path.setReadable(true, false);
+                path.setExecutable(true, false);
+                path.setWritable(true, false);
 
-            file.createNewFile();
+                path.mkdirs();
+                path.setReadable(true, false);
+                path.setExecutable(true, false);
+                path.setWritable(true, false);
 
-            file.setReadable(true, false);
-            file.setExecutable(true, false);
-            file.setWritable(true, false);
+                file.createNewFile();
 
-        }
+                file.setReadable(true, false);
+                file.setExecutable(true, false);
+                file.setWritable(true, false);
+
+                f = true;
+            }
 
             FileOutputStream fos = new FileOutputStream(file, true);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-            osw.write(log + '\n');
+            if(f) {
+                osw.write("{");
+                if(log.startsWith(",")) {
+                    log = log.substring(1);
+                }
+            }
+
+            osw.write(log);
             osw.close();
             fos.close();
         } catch (Exception e) {
