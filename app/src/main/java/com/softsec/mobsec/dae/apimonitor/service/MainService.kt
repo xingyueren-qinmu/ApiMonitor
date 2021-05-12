@@ -147,8 +147,10 @@ class MainService : Service() {
                     SharedPreferencesUtil.clearAppInfos(app)
                     Config.MOD_DAE_TESTING = if(Config.MOD_DAE_TESTING_PKGNAME == app) {
                         Config.MOD_DAE_TESTING_PKGNAME = ""
-                        sendBroadcast(Intent(Config.INTENTFILTER_BC_DAE_TEST_RESULT)
-                            .putExtra(Config.INTENT_BC_RES_PATH, historyFile.absolutePath)
+                        sendBroadcast(
+                            Intent(Config.INTENTFILTER_BC_DAE_TEST_RESULT)
+                                .setComponent(Config.INTENT_BC_COMPONENT)
+                                .putExtra(Config.INTENT_BC_RES_PATH, historyFile.absolutePath)
                         )
                         false
                     } else Config.MOD_DAE_TESTING

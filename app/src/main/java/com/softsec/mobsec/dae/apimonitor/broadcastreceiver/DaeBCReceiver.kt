@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.softsec.mobsec.dae.apimonitor.util.Config
 import com.softsec.mobsec.dae.apimonitor.util.SharedPreferencesUtil
+import com.softsec.mobsec.dae.apimonitor.util.Util
 
 class DaeBCReceiver : BroadcastReceiver() {
 
@@ -26,6 +27,11 @@ class DaeBCReceiver : BroadcastReceiver() {
                     SharedPreferencesUtil.context = context
                     SharedPreferencesUtil.addAppToHook(pkgName, false, logDir, dataDir)
                     SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, "$appsToHookStr$pkgName;")
+                    Util.execRootCmd("am force-stop $pkgName")
+                    context.sendBroadcast(
+                        Intent(Config.INTENTFILTER_BC_DAE_TEST_ACK)
+                            .setComponent(Config.INTENT_BC_COMPONENT)
+                    )
                     Config.MOD_DAE_TESTING = true
                     Config.MOD_DAE_TESTING_PKGNAME = pkgName
                 } else {

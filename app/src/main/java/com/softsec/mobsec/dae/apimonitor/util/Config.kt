@@ -1,6 +1,7 @@
 package com.softsec.mobsec.dae.apimonitor.util
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.os.Environment
 
 class Config {
@@ -30,6 +31,8 @@ class Config {
         const val INTENT_DAE_BC_TEST_START = "INTENT_DAE_BC_TEST_START"
         const val INTENT_BC_RES_PATH = "INTENT_BC_APIMONITOR_RES_PATH"
         const val INTENTFILTER_BC_DAE_TEST_RESULT = "ACTION_DAE_APIMONITOR_RES"
+        const val INTENTFILTER_BC_DAE_TEST_ACK = "ACTION_DAE_APIMONITOR_ACK"
+        val INTENT_BC_COMPONENT = ComponentName("com.softsec.mobsec.dae", "com.softsec.mobsec.dae.ApiMonitorReceiver")
 
 
 
