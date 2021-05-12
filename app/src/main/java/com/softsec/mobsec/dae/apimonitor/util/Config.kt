@@ -42,6 +42,8 @@ class Config {
         private val PATH_DAEAM_DATA = "${Environment.getExternalStorageDirectory().absolutePath}/Android/data/$DAEAM_PKGNAME"
         val PATH_TESTING_LOG = "$PATH_DAEAM_DATA/testing/"
         val PATH_HISTORY_LOG = "$PATH_DAEAM_DATA/history/"
+        val PATH_EXCEPTION_LOG = "$PATH_DAEAM_DATA/log/exception/"
+        val PATH_INFO_LOG = "$PATH_DAEAM_DATA/log/info/"
         const val PATH_TARGET_APP_LOG = "/DAEAM_testing/"
         const val PATH_SP = "/shared_prefs/"
 
