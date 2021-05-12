@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
             btn_main_clearcache.id -> {
                 Toast.makeText(this, "清空缓存", Toast.LENGTH_SHORT).show()
+                throw NullPointerException("test")
             }
 
             btn_main_viewRes.id -> {

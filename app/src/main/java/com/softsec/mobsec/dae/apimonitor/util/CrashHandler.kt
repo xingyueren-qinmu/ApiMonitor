@@ -16,11 +16,12 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
     }
 
     override fun uncaughtException(thread: Thread, throwable: Throwable) {
-        val exceptionLog = File("${Config.PATH_EXCEPTION_LOG}${sdf.format(Date())}.log")
-        if(!exceptionLog.exists()) {
-            exceptionLog.mkdirs()
+        val exceptionLogDir = File(Config.PATH_EXCEPTION_LOG)
+        if(!exceptionLogDir.exists()) {
+            exceptionLogDir.mkdirs()
         }
-        FileUtil.writeToFile("$thread, $throwable", exceptionLog.absolutePath)
+        FileUtil.writeToFile("$thread, ${throwable.message}",
+            "${Config.PATH_EXCEPTION_LOG}${sdf.format(Date())}.log")
         defaultHandler?.uncaughtException(thread, throwable)
     }
 }
