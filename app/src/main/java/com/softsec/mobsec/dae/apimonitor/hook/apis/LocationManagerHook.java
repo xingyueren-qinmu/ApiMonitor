@@ -25,8 +25,11 @@ public class LocationManagerHook extends Hook {
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                String result = "lat=" + location.getLatitude() +
-                        "&lng=" + location.getLongitude();
+                String result =
+                        location == null ?
+                                "lat=" + location.getLatitude() + "&lng=" + location.getLongitude()
+                                :
+                                "";
                 logger.addRelatedAttrs("result", result);
                 logger.recordAPICalling(param, "获取地理位置", "provider", (String)param.args[0]);
             }
