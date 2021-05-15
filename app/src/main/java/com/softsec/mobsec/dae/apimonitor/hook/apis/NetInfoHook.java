@@ -8,7 +8,9 @@ import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -26,8 +28,9 @@ public class NetInfoHook extends Hook {
                 super.afterHookedMethod(param);
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("MAC地址", (String)(param.getResult()));
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                logger.recordAPICalling(param, "获取Mac地址");
+                logger.recordAPICalling(param, "获取MAC地址");
             }
         });
 
@@ -38,8 +41,9 @@ public class NetInfoHook extends Hook {
                 super.afterHookedMethod(param);
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("WIFI IP", String.valueOf((int)(param.getResult())));
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                logger.recordAPICalling(param, "获取Wifi IP");
+                logger.recordAPICalling(param, "获取WIFI IP");
             }
         });
 
@@ -51,7 +55,8 @@ public class NetInfoHook extends Hook {
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                logger.recordAPICalling(param, "获取Wifi SSID");
+                logger.addRelatedAttrs("WIFI SSID", (String)(param.getResult()));
+                logger.recordAPICalling(param, "获取WIFI SSID");
             }
         });
 
@@ -62,6 +67,7 @@ public class NetInfoHook extends Hook {
                 super.afterHookedMethod(param);
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("Wifi BSSID", (String)(param.getResult()));
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取Wifi BSSID");
             }
@@ -74,6 +80,13 @@ public class NetInfoHook extends Hook {
                 super.afterHookedMethod(param);
                 String[] callingInfo = getCallingInfo();
                 logger.setCallingInfo(callingInfo[0]);
+                Enumeration<InetAddress> adds = (Enumeration<InetAddress>) param.getResult();
+                StringBuilder sb = new StringBuilder();
+                while(adds.hasMoreElements()) {
+                    sb.append(adds.nextElement().getHostAddress());
+                    sb.append(";");
+                }
+                logger.addRelatedAttrs("移动网络IP地址", sb.toString());
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取移动网络IP地址");
             }

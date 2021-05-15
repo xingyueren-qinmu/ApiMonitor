@@ -27,9 +27,6 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         Throwable ex = new Throwable();
         StackTraceElement[] stackElements = ex.getStackTrace();
 
-        int index = 0;
-        int startIndex = 0;
-        List<Integer> eleIndex = new ArrayList<>();
         String[] result = new String[2];
         result[0] = "";
         result[1] = "";
@@ -45,35 +42,28 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
                 "\\$Proxy0)";
         Pattern pattern = Pattern.compile(filterPkgRegex);
 
+        StringBuilder sb = new StringBuilder();
+        boolean f = false;
         for(StackTraceElement st : stackElements) {
-            //apimonitor hook的函数，即起始点
-            if(startIndex == 0 && st.getFileName().equals("<Xposed>")){
-                startIndex = index;
-                eleIndex.add(index);
+            if(!f && st.getFileName().equals("<Xposed>")) {
+                sb.append(st.getClassName()).append('.').append(st.getMethodName()).append(';');
+                f = !f;
+                continue;
             }
-
-            //之后调用栈过滤，利用filterPkgRegex
-            if(startIndex > 0 && index > startIndex){
+            if(f) {
                 Matcher matcher = pattern.matcher(st.getClassName());
                 if(!matcher.find()){
                     // 简单过滤调用栈，apimonitor、Xposed一类
-                    eleIndex.add(index);
                     Matcher matcherOri = patternOri.matcher(st.getClassName());
                     // 过滤掉Android自己的API，剩下第三方sdk包和应用自己的包
                     if(!matcherOri.find() && result[0].equals("")){
                         result[0] = st.getClassName() + "---" + st.getMethodName();
                     }
-
+                    sb.append(st.getClassName()).append('.').append(st.getMethodName()).append(';');
                 }
             }
-            index ++;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for(Integer eindex : eleIndex){
-            StackTraceElement st = stackElements[eindex];
-            sb.append(st.getClassName()).append('.').append(st.getMethodName()).append(';');
-        }
         result[1] = sb.toString();
 
         return result;

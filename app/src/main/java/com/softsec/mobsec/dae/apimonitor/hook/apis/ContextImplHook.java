@@ -41,6 +41,9 @@ public class ContextImplHook extends Hook {
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					if(param.args[1] != null){
 						String intentstr = descIntentFilter((IntentFilter) param.args[1]);
+						String[] callingInfo = getCallingInfo();
+						logger.setCallingInfo(callingInfo[0]);
+						logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 						logger.recordAPICalling(param, "注册广播接收器","IntentFilter", intentstr);
 					}
 				}
