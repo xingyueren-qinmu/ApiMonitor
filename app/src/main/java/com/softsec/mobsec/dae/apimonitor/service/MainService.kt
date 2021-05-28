@@ -18,11 +18,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Call
 import okhttp3.MultipartBody
 import okhttp3.Response
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
-import java.io.RandomAccessFile
-import java.lang.Exception
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.concurrent.schedule
@@ -120,14 +117,7 @@ class MainService : Service() {
                         File(Config.PATH_TESTING_LOG).mkdirs()
                         File(Config.PATH_HISTORY_LOG).mkdirs()
                     }
-                    try {
-                        appLogFile.copyTo(File(Config.PATH_TESTING_LOG + app), true, DEFAULT_BUFFER_SIZE)
-                    } catch (e: Exception) {
-                        e.printStackTrace();
-                    } finally {
-                        Thread.sleep(5 * 1000)
-                        appLogFile.copyTo(File(Config.PATH_TESTING_LOG + app), true, DEFAULT_BUFFER_SIZE)
-                    }
+                    Util.execRootCmd("cp ${appLogFile.absolutePath} ${Config.PATH_TESTING_LOG + app}")
                 }
             }
         }
@@ -139,7 +129,7 @@ class MainService : Service() {
                     val appTestingLogFile = File(Config.PATH_TESTING_LOG + app)
                     val historyFile = File(Config.PATH_HISTORY_LOG + "apimonitor@" + Util.getDate() + "--" + app)
                     if (appTestingLogFile.exists()) {
-                        appTestingLogFile.copyTo(historyFile, false, DEFAULT_BUFFER_SIZE)
+                        Util.execRootCmd("cp ${appTestingLogFile.absolutePath} ${historyFile.absolutePath}")
                         if(historyFile.exists()) {
                             FileUtil.writeToFile("}", historyFile.absolutePath)
                         }

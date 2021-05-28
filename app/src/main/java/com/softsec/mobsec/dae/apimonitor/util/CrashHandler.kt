@@ -30,6 +30,7 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
 
     private fun formatThrowable(throwable: Throwable): String {
         val sb = StringBuilder();
+        sb.append(throwable.message).append('\n')
         for(st in throwable.stackTrace) {
             sb.append(st.className).append("->").append(st.methodName).append("[${st.lineNumber}]")
                 .append("\n")
