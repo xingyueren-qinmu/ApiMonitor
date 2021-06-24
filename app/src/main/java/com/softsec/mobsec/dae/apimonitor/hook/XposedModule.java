@@ -176,6 +176,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new SensorManagerHook().initAllHooks(lpparam);
         new SettingsHook().initAllHooks(lpparam);
         new NetStreamHook().initAllHooks(lpparam);
+        new OthersHook().initAllHooks(lpparam);
         setupSocketMonitor(lpparam);
     }
 }

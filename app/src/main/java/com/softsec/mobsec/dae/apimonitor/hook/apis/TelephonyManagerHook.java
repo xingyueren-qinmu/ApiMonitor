@@ -6,18 +6,35 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class TelephonyManagerHook extends Hook {
 
 	public static final String TAG = "DAEAM_TelephonyManager";
+	public static Map<String, String> map = new HashMap<>((int)Math.ceil(10 / 0.75));
+
+	static {
+		map.put("46001", "中国联通");
+		map.put("46006", "中国联通");
+		map.put("46009", "中国联通");
+		map.put("46000", "中国移动");
+		map.put("46002", "中国移动");
+		map.put("46004", "中国移动");
+		map.put("46007", "中国移动");
+		map.put("46003", "中国电信");
+		map.put("46005", "中国电信");
+		map.put("46011", "中国电信");
+	}
 
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
@@ -216,5 +233,21 @@ public class TelephonyManagerHook extends Hook {
 			}
 		}
 
+		try {
+			Method getSimOperatorMethod = Reflector.findMethod(TelephonyManager.class, "getSimOperator");
+			methodHookImpl.hookMethod(getSimOperatorMethod, new MethodHookCallBack() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					String[] callingInfo = getCallingInfo();
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+					String operator = map.get((String)param.getResult());
+					logger.addRelatedAttrs("result", null == operator ? "unknown" : operator);
+					logger.recordAPICalling(param, "获取运营商");
+				}
+			});
+		} catch (Exception e) {
+			Log.e("获取运营商错误", e.getMessage());
+		}
 	}
 }
