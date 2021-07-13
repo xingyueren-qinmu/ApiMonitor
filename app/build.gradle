@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-//apply plugin: 'com.antfortune.freeline'
 
 android {
     compileSdkVersion 26
@@ -12,16 +11,10 @@ android {
     defaultConfig {
         applicationId "com.softsec.mobsec.dae.apimonitor"
         minSdkVersion 19
-        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags ""
-//            }
-//        }
     }
     buildTypes {
         release {
@@ -29,12 +22,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-//    externalNativeBuild {
-//        cmake {
-//            path "src/main/cpp/CMakeLists.txt"
-//            version "3.10.2"
-//        }
-//    }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -43,6 +30,11 @@ android {
     ndkVersion '21.1.6352462'
 
 }
+
+repositories {
+    maven { url 'https://api.xposed.info/' }
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -60,7 +52,8 @@ dependencies {
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
     // xposed
-    compileOnly 'de.robv.android.xposed:api:5+'
+    compileOnly 'de.robv.android.xposed:api:82'
+    compileOnly 'de.robv.android.xposed:api:82:sources'
 
     // commons-cli
     implementation 'commons-cli:commons-cli:1.4'

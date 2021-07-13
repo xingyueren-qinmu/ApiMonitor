@@ -8,11 +8,10 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.HttpHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.NetStreamHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.OkHttpHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketMonitor;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketPackEvent;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.observer.EventObserver;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.util.Config;
 import com.softsec.mobsec.dae.apimonitor.util.FileUtil;
+import com.softsec.mobsec.dae.apimonitor.util.Util;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -88,7 +87,9 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
                         if ("Xposed".equals(param.args[0])) {
                             String log = (String) param.args[1];
                             if(log.contains("DAEAM_") && !log.contains("DAEAM_ERROR")) {
-                                FileUtil.writeToFile(log.replace("DAEAM_", ""), absolutePath);
+                                Util.execRootCmdWithResult("echo -e \"" +
+                                        log.replace("DAEAM_", "")
+                                        + "\\c\" >> " + absolutePath);
                             }
                         }
                     }

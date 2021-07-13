@@ -80,10 +80,7 @@ class ChooseAppActivity : AppCompatActivity() {
                 else
                     packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir + Config.PATH_TARGET_APP_LOG
                 val logFile = File(logDir + pkgName)
-                if (logFile.exists()) {
-                    logFile.delete()
-                    logFile.parentFile.delete()
-                }
+                Util.execRootCmdWithResult("rm -rf ${logFile.parent}")
                 SharedPreferencesUtil.addAppToHook(pkgName, writePerm, logDir,
                     packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir)
                 Log.i("logPath", logDir + pkgName)
@@ -100,7 +97,7 @@ class ChooseAppActivity : AppCompatActivity() {
             // 关闭所有被检应用
             for(pkgName in appsToMonitorSet) {
                 if(pkgName != "") {
-                    Util.execRootCmd("am force-stop $pkgName")
+                    Util.execRootCmdWithResult("am force-stop $pkgName")
                 }
             }
             onBackPressed()

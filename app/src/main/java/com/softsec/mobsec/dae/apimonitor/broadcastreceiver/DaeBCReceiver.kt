@@ -27,7 +27,7 @@ class DaeBCReceiver : BroadcastReceiver() {
                     SharedPreferencesUtil.context = context
                     SharedPreferencesUtil.addAppToHook(pkgName, false, logDir, dataDir)
                     SharedPreferencesUtil.put(Config.SP_APPS_TO_HOOK, "$appsToHookStr$pkgName;")
-                    Util.execRootCmd("am force-stop $pkgName")
+                    Util.execRootCmdWithResult("am force-stop $pkgName")
                     context.sendBroadcast(
                         Intent(Config.INTENTFILTER_BC_DAE_TEST_ACK)
                             .setComponent(Config.INTENT_BC_COMPONENT)

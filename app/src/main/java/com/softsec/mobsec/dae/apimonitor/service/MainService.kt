@@ -117,7 +117,7 @@ class MainService : Service() {
                         File(Config.PATH_TESTING_LOG).mkdirs()
                         File(Config.PATH_HISTORY_LOG).mkdirs()
                     }
-                    Util.execRootCmd("cp ${appLogFile.absolutePath} ${Config.PATH_TESTING_LOG + app}")
+                    Util.execRootCmdWithResult("cp ${appLogFile.absolutePath} ${Config.PATH_TESTING_LOG + app}")
                 }
             }
         }
@@ -129,7 +129,7 @@ class MainService : Service() {
                     val appTestingLogFile = File(Config.PATH_TESTING_LOG + app)
                     val historyFile = File(Config.PATH_HISTORY_LOG + "apimonitor@" + Util.getDate() + "--" + app)
                     if (appTestingLogFile.exists()) {
-                        Util.execRootCmd("cp ${appTestingLogFile.absolutePath} ${historyFile.absolutePath}")
+                        Util.execRootCmdWithResult("cp ${appTestingLogFile.absolutePath} ${historyFile.absolutePath}")
                         if(historyFile.exists()) {
                             FileUtil.writeToFile("}", historyFile.absolutePath)
                         }

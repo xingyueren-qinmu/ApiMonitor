@@ -34,5 +34,21 @@ public class OthersHook extends Hook {
         } catch (Exception e) {
             Log.e("SN码", e.getMessage());
         }
+
+        Method getStringMethod = Reflector.findMethod(Build.class, "getString");
+        methodHookImpl.hookMethod(getStringMethod, new MethodHookCallBack() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if("ro.product.brand".equals(param.args[0])) {
+                    String[] callingInfo = getCallingInfo();
+                    logger.setCallingInfo(callingInfo[0]);
+                    logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                    String brand = (String)param.getResult();
+                    logger.addRelatedAttrs("brand", null == brand ? "" : brand);
+                    logger.recordAPICalling(param, "获取设备名称");
+                }
+            }
+        });
     }
+
 }

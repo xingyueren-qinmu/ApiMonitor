@@ -22,9 +22,7 @@ public class XposedHide extends Hook {
         methodHookImpl.hookMethod(getStackTraceMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-
-
-                XposedBridge.log("getStackTrace");
+//                XposedBridge.log("getStackTrace");
                 StackTraceElement[] res = (StackTraceElement[]) param.getResult();
                 int newLen = res.length;
                 for(StackTraceElement se : res) {
@@ -51,7 +49,7 @@ public class XposedHide extends Hook {
         methodHookImpl.hookMethod(findClassMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("findClass");
+//                XposedBridge.log("findClass");
                 String className = (String)param.args[0];
                 if(className.contains("Xposed")) {
                     param.setThrowable(new ClassNotFoundException(className));
@@ -66,7 +64,7 @@ public class XposedHide extends Hook {
         methodHookImpl.hookMethod(loadClassMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("loadClass");
+//                XposedBridge.log("loadClass");
                 String className = (String)param.args[0];
                 if(className.contains("Xposed")) {
                     XposedBridge.log("got:" + className);

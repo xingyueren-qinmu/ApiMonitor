@@ -45,7 +45,7 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         StringBuilder sb = new StringBuilder();
         boolean f = false;
         for(StackTraceElement st : stackElements) {
-            if(!f && st.getFileName().equals("<Xposed>")) {
+            if(!f && "<Xposed>".equals(st.getFileName())) {
                 sb.append(st.getClassName()).append('.').append(st.getMethodName()).append(';');
                 f = !f;
                 continue;
