@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -17,14 +19,14 @@ import java.lang.reflect.Method;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class IPCHook extends Hook {
-    public static final String TAG = "DAEAM_IPC";
+    public static final String TAG = "IPC";
 
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-        logger.setTag(TAG);
+
 
         Method startActivitiesMethod = Reflector.findMethod(ContextWrapper.class, "startActivities", Intent[].class);
-        methodHookImpl.hookMethod(startActivitiesMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(startActivitiesMethod, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent[] it = (Intent[]) param.args[0];
@@ -32,26 +34,32 @@ public class IPCHook extends Hook {
                 for(Intent i : it) {
                     sb.append(i).append(",");
                 }
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "打开其他Activity",
                         "activities", sb.toString().substring(0, sb.length() - 1));
             }
         });
 
         Method startServiceMethod = Reflector.findMethod(ContextWrapper.class, "startService", Intent.class);
-        methodHookImpl.hookMethod(startServiceMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(startServiceMethod, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "打开其他服务", "Intent", intent.toString());
             }
         });
 
         Method startActivityMethod1 = Reflector.findMethod(ContextWrapper.class, "startActivity",
                 Intent.class, Bundle.class);
-        methodHookImpl.hookMethod(startActivityMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(startActivityMethod1, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "打开其他服务", "Intent", intent.toString());
             }
         });
@@ -59,37 +67,43 @@ public class IPCHook extends Hook {
         //Method Method = Reflector.findMethod()(ContextWrapper.class, "startActivity",
         Method startActivityMethod2 = Reflector.findMethod(Activity.class, "startActivity",
                 Intent.class);
-        methodHookImpl.hookMethod(startActivityMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(startActivityMethod2, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "打开其他应用", "Intent", intent.toString());
             }
         });
 
         Method sendBroadcastMethod1 = Reflector.findMethod(ContextWrapper.class, "sendBroadcast",
                 Intent.class);
-        methodHookImpl.hookMethod(sendBroadcastMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(sendBroadcastMethod1, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
 
         Method sendBroadcastMethod2 = Reflector.findMethod(ContextWrapper.class, "sendBroadcast",
                 Intent.class, String.class);
-        methodHookImpl.hookMethod(sendBroadcastMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(sendBroadcastMethod2, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
 
         Method registerReceiverMethod1 = Reflector.findMethod(ContextWrapper.class, "registerReceiver",
                 BroadcastReceiver.class, IntentFilter.class);
-        methodHookImpl.hookMethod(registerReceiverMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(registerReceiverMethod1, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 IntentFilter intentFilter = (IntentFilter) param.args[1];
@@ -98,13 +112,15 @@ public class IPCHook extends Hook {
                 for(int i=0; i<intentFilter.countActions(); i++) {
                     sb.append(intentFilter.getAction(i)).append(",");
                 }
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
 
         Method registerReceiverMethod2 = Reflector.findMethod(ContextWrapper.class, "registerReceiver",
                 BroadcastReceiver.class, IntentFilter.class, String.class, Handler.class);
-        methodHookImpl.hookMethod(registerReceiverMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(registerReceiverMethod2, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 IntentFilter intentFilter = (IntentFilter) param.args[1];
@@ -117,6 +133,8 @@ public class IPCHook extends Hook {
                 if(param.args[2] != null){
                     sb.append(" Permissions: ").append(param.args[2]);
                 }
+                Logger logger = new Logger();
+                logger.setTag(TAG);
                 logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });

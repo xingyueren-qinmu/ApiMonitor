@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -20,7 +22,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class ContentResolverHook extends Hook {
 
-	public static final String TAG = "DAEAM_ContentResolver";
+	public static final String TAG = "ContentResolver";
 
 	private static Map<String, String> privacyUriMap;
 
@@ -40,11 +42,11 @@ public class ContentResolverHook extends Hook {
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
-		logger.setTag(TAG);
+
 
 		Method queryMethod = Reflector.findMethod(ContentResolver.class, "query",
 				Uri.class, String[].class, String.class, String[].class, String.class);
-		methodHookImpl.hookMethod(queryMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(queryMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
@@ -52,7 +54,7 @@ public class ContentResolverHook extends Hook {
 				if (!"".equals(privacyType)) {
 					String queryStr = concatenateQuery(uri, (String[]) param.args[1], (String) param.args[2], (String[]) param.args[3],
 							(String) param.args[4]);
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
 					Cursor cursor = (Cursor)(param.getResult());
 					StringBuilder sb = new StringBuilder();
 					while(cursor.moveToNext()) {
@@ -62,6 +64,8 @@ public class ContentResolverHook extends Hook {
 						}
 						sb.append(';');
 					}
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.addRelatedAttrs("result", sb.toString());
@@ -75,13 +79,15 @@ public class ContentResolverHook extends Hook {
 
 		Method registerContentObserverMethod = Reflector.findMethod(ContentResolver.class,
 				"registerContentObserver", Uri.class, boolean.class, ContentObserver.class, int.class);
-		methodHookImpl.hookMethod(registerContentObserverMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(registerContentObserverMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param,
@@ -95,14 +101,16 @@ public class ContentResolverHook extends Hook {
 
 		Method insertMethod = Reflector.findMethod(ContentResolver.class, "insert",
 				Uri.class, ContentValues.class);
-		methodHookImpl.hookMethod(insertMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(insertMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String insertStr = concatenateInsert(uri, (ContentValues) param.args[1]);
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param, "本机数据库添加",
@@ -115,7 +123,7 @@ public class ContentResolverHook extends Hook {
 
 		Method deletemethod = Reflector.findMethod(ContentResolver.class, "delete",
 				Uri.class, String.class, String[].class);
-		methodHookImpl.hookMethod(deletemethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(deletemethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
@@ -123,7 +131,9 @@ public class ContentResolverHook extends Hook {
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String deleteStr = concatenateDelete(uri, (String) param.args[1], (String[]) param.args[2]);
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param, "本机数据库删除",
@@ -137,14 +147,16 @@ public class ContentResolverHook extends Hook {
 
 		Method updatemethod = Reflector.findMethod(ContentResolver.class, "update",
 				Uri.class, ContentValues.class, String.class, String[].class);
-		methodHookImpl.hookMethod(updatemethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(updatemethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Uri uri = (Uri) param.args[0];
 				String privacyType = getPrivacyType(uri);
 				if (!"".equals(privacyType)) {
 					String updateStr = concatenateUpdate(uri, (ContentValues) param.args[1], (String) param.args[2], (String[]) param.args[3]);
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param, "本机数据库修改",

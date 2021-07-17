@@ -4,6 +4,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -13,15 +15,15 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class AccountManagerHook extends Hook {
 
-    public static final String TAG = "DAEAM_AccountManager:";
+    public static final String TAG = "AccountManager:";
 
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-        logger.setTag(TAG);
+
 
         Method getAccountsMethod = Reflector.findMethod(
                 AccountManager.class, "getAccounts");
-        methodHookImpl.hookMethod(getAccountsMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(getAccountsMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Account[] accs = (Account[]) param.getResult();
@@ -29,8 +31,10 @@ public class AccountManagerHook extends Hook {
                 for(Account acc : accs) {
                     sb.append("name=").append(acc.name).append("&type=").append(acc.type).append(";");
                 }
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.addRelatedAttrs("result", sb.toString());
                 logger.recordAPICalling(param, "获取账户信息");
@@ -39,7 +43,7 @@ public class AccountManagerHook extends Hook {
 
         Method getAccountsByTypeMethod = Reflector.findMethod(
                 AccountManager.class, "getAccountsByType", String.class);
-        methodHookImpl.hookMethod(getAccountsByTypeMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(getAccountsByTypeMethod, new MethodHookCallBack() {
 
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Exception {
@@ -48,8 +52,10 @@ public class AccountManagerHook extends Hook {
                 for(Account acc : accs) {
                     sb.append("name=").append(acc.name).append("&type=").append(acc.type).append(";");
                 }
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.addRelatedAttrs("result", sb.toString());
                 logger.recordAPICalling(param, "获取账户信息", "type", (String)param.args[0]);

@@ -1,6 +1,8 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.formatter;
 
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketPackEvent;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.orgApacheCommons.lang3.StringUtils;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -12,8 +14,6 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.orgApacheCommons.lang3.StringUtils;
 
 /**
  * 解析http头部
@@ -147,7 +147,7 @@ public class HttpBaseFormatter implements EventFormatter {
             return true;
         } catch (IOException ioe) {
             //the exception will not happen
-            ioe.printStackTrace();
+            Logger.logError(ioe);
             return false;
         }
     }

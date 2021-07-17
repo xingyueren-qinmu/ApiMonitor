@@ -3,7 +3,30 @@ package com.softsec.mobsec.dae.apimonitor.hook;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.softsec.mobsec.dae.apimonitor.hook.apis.*;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.AccountManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.ActivityManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.ActivityThreadHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.AudioRecordHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.CameraHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.ContentResolverHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.ContextImplHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.CookieManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.CryptoHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.IPCHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.LocationManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.MediaRecorderHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.NetInfoHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.NotificationManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.OthersHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.PackageManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.ProcessHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.RuntimeHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.SensorManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.SettingsHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.SmsManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.TelephonyManagerHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.TestHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.WebViewHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.HttpHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.NetStreamHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.OkHttpHook;
@@ -11,7 +34,6 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.Soc
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.util.Config;
 import com.softsec.mobsec.dae.apimonitor.util.FileUtil;
-import com.softsec.mobsec.dae.apimonitor.util.Util;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -23,6 +45,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
@@ -31,7 +54,7 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     private static XSharedPreferences xSP;
-    public static final String TAG = "DAEAM_XposedModule";
+    public static final String TAG = "XposedModule";
 
     @Override
     public void initZygote(StartupParam startupParam) {
@@ -79,17 +102,15 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         File folder = new File(xSP.getString(lpparam.packageName + Config.SP_TARGET_APP_DIR, null));
         folder.setExecutable(true, false);
 
-        findAndHookMethod("android.util.Log", lpparam.classLoader, "i",
+        findAndHookMethod("android.util.Log", lpparam.classLoader, "w",
                 String.class, String.class, new XC_MethodHook() {
 
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) {
-                        if ("Xposed".equals(param.args[0])) {
+                        if ("DAEAM".equals(param.args[0])) {
                             String log = (String) param.args[1];
-                            if(log.contains("DAEAM_") && !log.contains("DAEAM_ERROR")) {
-                                Util.execRootCmdWithResult("echo -e \"" +
-                                        log.replace("DAEAM_", "")
-                                        + "\\c\" >> " + absolutePath);
+                            if(log.contains("DAEAM_") && !log.contains("ERROR")) {
+                                FileUtil.writeToFile(log, absolutePath);
                             }
                         }
                     }
@@ -141,7 +162,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
                 }
                 XposedBridge.log("\n");
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.logError(e);
             }
             logger.recordAPICalling("Socket通信");
         });
@@ -178,6 +199,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new SettingsHook().initAllHooks(lpparam);
         new NetStreamHook().initAllHooks(lpparam);
         new OthersHook().initAllHooks(lpparam);
+        new TestHook().initAllHooks(lpparam);
         setupSocketMonitor(lpparam);
     }
 }

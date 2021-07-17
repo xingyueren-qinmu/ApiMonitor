@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketMonitor;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketPackEvent;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -139,7 +140,7 @@ public class FileLogEventObserver implements EventObserver {
                 printStream.flush();
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.logError(e);
             }
         }
     }

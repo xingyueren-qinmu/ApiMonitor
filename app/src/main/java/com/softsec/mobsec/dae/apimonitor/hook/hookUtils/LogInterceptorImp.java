@@ -434,7 +434,7 @@ public class LogInterceptorImp implements InvocationHandler {
                 try {
                     return method.invoke(requestObject).toString();
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                     CLogUtils.e("getUrlInRequest error " + e.toString());
                 }
             }
@@ -529,7 +529,7 @@ public class LogInterceptorImp implements InvocationHandler {
                         return invoke;
                     }
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -544,7 +544,7 @@ public class LogInterceptorImp implements InvocationHandler {
                 try {
                     return (String) field.get(response);
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -565,7 +565,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return (long) method.invoke(requestBodyObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getContentLengthMethodAndInvokeFromRequestBody error " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -581,7 +581,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return field.get(responseObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getResponseBodyObject  IllegalAccessException " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -615,10 +615,10 @@ public class LogInterceptorImp implements InvocationHandler {
             }
         } catch (IllegalAccessException e) {
             CLogUtils.e("getStringMethodAndInvoke  IllegalAccessException " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (InvocationTargetException e) {
             CLogUtils.e("getStringMethodAndInvoke  InvocationTargetException " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         throw new Exception("getStringMethodAndInvoke ==Null ");
     }
@@ -656,7 +656,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return field.get(bufferObject);
                 } catch (IllegalAccessException e) {
                     CLogUtils.e("getHeadInBuffer     " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -730,7 +730,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return method.invoke(BufferedSourceObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getBufferMethodInBufferedSourceAndInvoke   IllegalAccessException " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -759,7 +759,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return;
                 } catch (Throwable e) {
                     CLogUtils.e("getBufferedSourceRequestMethodAndInvoke    " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -796,10 +796,10 @@ public class LogInterceptorImp implements InvocationHandler {
                     return method.invoke(responseBodyObject);
                 } catch (IllegalAccessException e) {
                     CLogUtils.e("  getSourceAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 } catch (InvocationTargetException e) {
                     CLogUtils.e("  getSourceAndInvoke   InvocationTargetException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -854,7 +854,7 @@ public class LogInterceptorImp implements InvocationHandler {
             }
         } catch (Throwable e) {
             CLogUtils.e("bodyHasUnknownEncoding error " + e.getMessage());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         throw new Exception("bodyHasUnknownEncoding  没有 找到 ");
     }
@@ -962,7 +962,7 @@ public class LogInterceptorImp implements InvocationHandler {
 
                 } catch (Throwable e) {
                     CLogUtils.e("getHeadersGetMethodAndInvoke   IllegalAccessException " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -979,7 +979,7 @@ public class LogInterceptorImp implements InvocationHandler {
                 try {
                     return field.getInt(responseObject);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                     CLogUtils.e("getMethodFieldInRequest   IllegalAccessException 没拿到   method");
                 }
             }
@@ -1001,7 +1001,7 @@ public class LogInterceptorImp implements InvocationHandler {
                 try {
                     return (String) field.get(responseInRequestMethodAndInvoke);
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                     CLogUtils.e("getMethodFieldInRequest   IllegalAccessException 没拿到   method");
                 }
             }
@@ -1022,7 +1022,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return field.get(ResponseObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getResponseInRequestMethodAndInvoke    没拿到   ResponseInRequest");
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1038,11 +1038,11 @@ public class LogInterceptorImp implements InvocationHandler {
                     return (int) method.invoke(responseObject);
                 } catch (IllegalAccessException e) {
                     CLogUtils.e("getResponseBodyContentLengthMethodAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 } catch (InvocationTargetException e) {
                     CLogUtils.e("getResponseBodyContentLengthMethodAndInvoke   InvocationTargetException   " + e.toString());
 
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1064,7 +1064,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return (long) method.invoke(responseBodyObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getResponseBodyContentLengthMethodAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1109,10 +1109,10 @@ public class LogInterceptorImp implements InvocationHandler {
                     return method.invoke(responseBodyClass);
                 } catch (IllegalAccessException e) {
                     CLogUtils.e("getResponseBodyMethodAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 } catch (InvocationTargetException e) {
                     CLogUtils.e("getResponseBodyMethodAndInvoke   InvocationTargetException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1135,7 +1135,7 @@ public class LogInterceptorImp implements InvocationHandler {
 //                    return (String) method.invoke(requestObject);
 //                } catch (Throwable e) {
 //                    CLogUtils.e("getMethodInRequest   IllegalAccessException   " + e.toString());
-//                    e.printStackTrace();
+//                    Logger.logError(e);
 //                }
 //            }
 //        }
@@ -1163,7 +1163,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return (String) method.invoke(bufferObject, charset);
                 } catch (Throwable e) {
                     CLogUtils.e("getReadStringAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1181,7 +1181,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return aLong == 0L;
                 } catch (IllegalAccessException e) {
                     CLogUtils.e("exhausted   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1237,13 +1237,13 @@ public class LogInterceptorImp implements InvocationHandler {
             }
         } catch (InstantiationException e) {
             CLogUtils.e("isPlaintext   InstantiationException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (IllegalAccessException e) {
             CLogUtils.e("isPlaintext   IllegalAccessException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (Throwable e) {
             CLogUtils.e("isPlaintext   Exception   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         throw new Exception("isPlaintext == Null ");
     }
@@ -1303,10 +1303,10 @@ public class LogInterceptorImp implements InvocationHandler {
                         return;
                     } catch (IllegalAccessException e) {
                         CLogUtils.e("isPlaintext   IllegalAccessException   " + e.toString());
-                        e.printStackTrace();
+                        Logger.logError(e);
                     } catch (InvocationTargetException e) {
                         CLogUtils.e("getcopyToMethodAndInvoke   InvocationTargetException   " + e.toString());
-                        e.printStackTrace();
+                        Logger.logError(e);
                     }
                 }
             }
@@ -1329,7 +1329,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return method.invoke(RBodyObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getContentTypeMethodAndInvoke   IllegalAccessException   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1370,7 +1370,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return;
                 } catch (Throwable e) {
                     CLogUtils.e(" invokeW1riteTo  Throwable" + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                     return;
                 }
             }
@@ -1410,7 +1410,7 @@ public class LogInterceptorImp implements InvocationHandler {
             }
         } catch (Throwable e) {
             CLogUtils.e("getRequestBodyObject error " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -1439,7 +1439,7 @@ public class LogInterceptorImp implements InvocationHandler {
                         return method.invoke(chainObject, RequestObject);
                     } catch (Throwable e) {
                         CLogUtils.e("getRequestObject  IllegalAccessException    " + e.toString());
-                        e.printStackTrace();
+                        Logger.logError(e);
                     }
                 }
             }
@@ -1461,7 +1461,7 @@ public class LogInterceptorImp implements InvocationHandler {
                     return field.get(reObject);
                 } catch (Throwable e) {
                     CLogUtils.e("getHeadersInResponse   " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1484,12 +1484,12 @@ public class LogInterceptorImp implements InvocationHandler {
                     try {
                         return Headers.toString();
                     } catch (Throwable e) {
-                        e.printStackTrace();
+                        Logger.logError(e);
                         CLogUtils.e("getHeadersMethodAndInvoke   " + e.toString());
                     }
                 } catch (Throwable e) {
                     CLogUtils.e("getHeadersMethodAndInvoke  IllegalAccessException " + e.toString());
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -1514,7 +1514,7 @@ public class LogInterceptorImp implements InvocationHandler {
             return (String) method.invoke(Object);
         } catch (Throwable e) {
             CLogUtils.e("InvokeToString   没有 找到 toString " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         throw new Exception("InvokeToString == Null ");
     }
@@ -1534,7 +1534,7 @@ public class LogInterceptorImp implements InvocationHandler {
                         return method.invoke(chainObject);
                     } catch (Throwable e) {
                         CLogUtils.e("getRequestObject  IllegalAccessException    " + e.toString());
-                        e.printStackTrace();
+                        Logger.logError(e);
                     }
                 }
             }

@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -26,18 +28,20 @@ public class SensorManagerHook extends Hook {
         sensorTypeMap.put(Sensor.TYPE_STEP_DETECTOR, "步测器传感器");
     }
 
-    public static final String TAG = "DAEAM_SensorManager";
+    public static final String TAG = "SensorManager";
 
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-        logger.setTag(TAG);
+
         Method getDefaultSensorMethod = Reflector.findMethod(SensorManager.class, "getDefaultSensor", int.class);
-        methodHookImpl.hookMethod(getDefaultSensorMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(getDefaultSensorMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "获取传感器信息",
                         "类型", sensorTypeMap.get((int)param.args[0]));

@@ -1,52 +1,47 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis.httphook;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.sql.Ref;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import kotlin.Pair;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okio.Buffer;
-
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 public class OkHttpHook extends Hook {
 
+    public static final String TAG = "OKHttp";
+
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-        logger.setTag("OKHttp");
+
 
         try {
             Method openMethod = Reflector.findMethod("com.android.okhttp.OkHttpClient", packageParam.classLoader, "open", URI.class);
-            methodHookImpl.hookMethod(openMethod, new MethodHookCallBack() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    if (param.args[0] != null) {
-                        URI uri = (URI) param.args[0];
-                        logger.recordAPICalling(param, "okhttp请求", "URL", uri.toString());
-                    } else {
-                        logger.recordAPICalling(param, "okhttp请求");
+            if(openMethod != null) {
+                MethodHookHandler.hookMethod(openMethod, new MethodHookCallBack() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        Logger logger = new Logger();
+                        logger.setTag(TAG);
+                        if (param.args[0] != null) {
+                            URI uri = (URI) param.args[0];
+                            logger.recordAPICalling(param, "okhttp请求", "URL", uri.toString());
+                        } else {
+                            logger.recordAPICalling(param, "okhttp请求");
+                        }
                     }
-                }
-            });
+                });
+            }
+
 //
 //
 //            //com.squareup.okhttp.internal.http.HttpURLConnectionImpl
@@ -54,7 +49,7 @@ public class OkHttpHook extends Hook {
 //                    "com.android.okhttp.internal.http.HttpURLConnectionImpl",
 //                    packageParam.classLoader,
 //                    "getOutputStream");
-//            methodHookImpl.hookMethod(getOutputStringMethod, new MethodHookCallBack() {
+//            MethodHookHandler.hookMethod(getOutputStringMethod, new MethodHookCallBack() {
 //                @Override
 //                protected void beforeHookedMethod(MethodHookParam param) {
 //                    HttpURLConnection urlConn = (HttpURLConnection) param.thisObject;
@@ -82,7 +77,7 @@ public class OkHttpHook extends Hook {
 //                    "com.android.okhttp.internal.http.HttpURLConnectionImpl",
 //                    packageParam.classLoader,
 //                    "getInputStream");
-//            methodHookImpl.hookMethod(getInputStreamMethod, new MethodHookCallBack() {
+//            MethodHookHandler.hookMethod(getInputStreamMethod, new MethodHookCallBack() {
 //                @Override
 //                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 //                    HttpURLConnection urlConn = (HttpURLConnection) param.thisObject;
@@ -106,7 +101,7 @@ public class OkHttpHook extends Hook {
 //                }
 //            });
 //        } catch (NoSuchMethodException | ClassNotFoundException e) {
-//            logger.logError(e);
+//            Logger.logError(e);
 //        }
 
 //        try {
@@ -118,7 +113,7 @@ public class OkHttpHook extends Hook {
 //                    "newCall", requestClass
 //            );
 //
-//            methodHookImpl.hookMethod(newCallMethod, new MethodHookCallBack() {
+//            MethodHookHandler.hookMethod(newCallMethod, new MethodHookCallBack() {
 //                @Override
 //                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //                    Request request = (Request) param.args[0];
@@ -146,7 +141,7 @@ public class OkHttpHook extends Hook {
 //                }
 //            });
 //        } catch (ClassNotFoundException | NoSuchMethodException e) {
-//            logger.logError(e);
+//            Logger.logError(e);
 //        }
 
             XposedBridge.log("okhttp test in");
@@ -313,15 +308,16 @@ public class OkHttpHook extends Hook {
 //            });
 
             Method proceedMethod = Reflector.findMethod("okhttp3.internal.http.RealInterceptorChain",packageParam.classLoader, "proceed", requestClass);
-            methodHookImpl.hookMethod(proceedMethod, new MethodHookCallBack() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
+            if(null != proceedMethod) {
+                MethodHookHandler.hookMethod(proceedMethod, new MethodHookCallBack() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
 
-                    StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new StringBuilder();
 
-                    //入参
-                    Object arg = param.args[0];  //this.originalRequest
+                        //入参
+                        Object arg = param.args[0];  //this.originalRequest
 
 
 //                    StringBuilder sbRequest = new StringBuilder();
@@ -473,11 +469,11 @@ public class OkHttpHook extends Hook {
 //
 //                    XposedBridge.log(sb.toString());
 
-                }
-            });
-
+                    }
+                });
+            }
         } catch (ClassNotFoundException | NoSuchMethodException e) {
-            logger.logError(e);
+            Logger.logError(e);
         }
     }
 
@@ -502,7 +498,7 @@ public class OkHttpHook extends Hook {
             }
             return out.toByteArray();
         } catch (Exception e) {
-            //e.printStackTrace();
+            //Logger.logError(e);
             return bytes;
         }
     }

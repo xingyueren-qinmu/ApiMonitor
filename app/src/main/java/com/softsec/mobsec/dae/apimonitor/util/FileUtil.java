@@ -2,6 +2,8 @@ package com.softsec.mobsec.dae.apimonitor.util;
 
 import android.annotation.SuppressLint;
 
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -62,7 +64,7 @@ public class FileUtil {
             osw.close();
             fos.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
     }
 }

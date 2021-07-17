@@ -1,8 +1,11 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -22,7 +25,7 @@ public class Logger {
     private LinkedHashMap<String, String> methodArgs = null;
     private LinkedHashMap<String, String> relatedAttrs = null;
 
-    private static final String ERROR = "DAEAM_ERROR";
+    private static final String ERROR = "ERROR";
 
     public Logger() {}
 
@@ -84,17 +87,16 @@ public class Logger {
 
 
     public void addRelatedAttrs(String attrName, String content) {
-        if(relatedAttrs == null) {
+        if(null == relatedAttrs) {
             relatedAttrs = new LinkedHashMap<>();
         }
         relatedAttrs.put(attrName, content);
     }
 
-    // 相当于手撸了一个json格式，懒得用JSON库了，毕竟层层叠叠的
     private void generateLog() {
         StringBuilder sb = new StringBuilder();
         JsonObject json = new JsonObject();
-        json.addProperty("tag", tag);
+        json.addProperty("tag", "DAEAM_" + tag);
         json.addProperty("behavior", behaviorName);
         json.addProperty("callingClass", callingClass);
         json.addProperty("callingMethod", callingMethod);
@@ -105,17 +107,6 @@ public class Logger {
             json.addProperty("method", methodName);
         }
 
-//        sb.append("\"tag\":\"").append(tag).append("\",");
-//        sb.append("\"behavior\":\"").append(behaviorName).append("\",");
-//        sb.append("\"callingClass\":\"").append(callingClass).append("\",");
-//        sb.append("\"callingMethod\":\"").append(callingMethod).append("\",");
-//        if(!"".equals(methodClass)) {
-//            sb.append("\"methodClass\":\"").append(methodClass).append("\",");
-//        }
-//        if(!"".equals(methodName)) {
-//            sb.append("\"method\":\"").append(methodName).append("\",");
-//        }
-
         if(methodArgs != null && methodArgs.size() > 0) {
             JsonObject args = new JsonObject();
             for (String key : methodArgs.keySet()) {
@@ -125,18 +116,7 @@ public class Logger {
             json.add("methodArgs", args);
         }
 
-//        if(methodArgs != null && methodArgs.size() > 0) {
-//            sb.append("\"methodArgs\":{");
-//            for (String key : methodArgs.keySet()) {
-//                String value = methodArgs.get(key) == null ? "null" : methodArgs.get(key);
-//                sb.append("\"").append(key).append("\":\"")
-//                        .append(value.replace("\"", "\\\""))
-//                        .append("\",");
-//            }
-//            sb.delete(sb.length() - 1, sb.length()).append("},");
-//        }
-
-        if(relatedAttrs != null && relatedAttrs.size() > 0) {
+        if(null != relatedAttrs && !relatedAttrs.isEmpty()) {
             JsonObject attrs = new JsonObject();
             for (String key : relatedAttrs.keySet()) {
                 String value = relatedAttrs.get(key);
@@ -153,28 +133,16 @@ public class Logger {
             json.add("relatedAttrs", attrs);
         }
 
-//        if(relatedAttrs != null && relatedAttrs.size() > 0) {
-//            sb.append("\"relatedAttrs\":{");
-//            for (String key : relatedAttrs.keySet()) {
-//                sb.append("\"").append(key).append("\":");
-//                String value = relatedAttrs.get(key);
-//                try {
-//                    new Gson().fromJson(value, Object.class);
-//                    sb.append(value);
-//                } catch (JsonSyntaxException e) {
-//                    sb.append("\"")
-//                            .append(value.replace("\"", "\\\""))
-//                            .append("\"");
-//                }
-//                sb.append(",");
-//            }
-//            sb.delete(sb.length() - 1, sb.length()).append("},");
-//        }
 
         JsonObject res = new JsonObject();
         res.add(String.valueOf(System.currentTimeMillis()), json);
         String s = res.toString();
-        XposedBridge.log("," + s.substring(1, s.length() - 1));
+        String finalLog = "," + s.substring(1, s.length() - 1);
+        Log.w("DAEAM", "," + s.substring(1, s.length() - 1));
+        // 此处目前只能手动调整，因为如果在用户界面调整，需要读取 SharedPreference 内容，性能消耗太大
+        if(false) {
+            XposedBridge.log("DAEAM" + finalLog);
+        }
         clear();
     }
 
@@ -186,8 +154,20 @@ public class Logger {
         relatedAttrs = null;
     }
 
-    public void logError(Exception e) {
-        XposedBridge.log(ERROR + " " + e.getMessage());
+    public static void logError(Throwable t) {
+        while (t.getCause() != null) {
+            if (t instanceof UnknownHostException) {
+                return;
+            }
+            t = t.getCause();
+        }
+        XposedBridge.log("Found:" + t);
+        for(StackTraceElement st : t.getStackTrace()) {
+            XposedBridge.log("catched at:" + st.toString());
+            if(checkST(st, "")) {
+                break;
+            }
+        }
     }
 
     public void setCallingInfo(String callingInfo) {
@@ -196,4 +176,11 @@ public class Logger {
         callingMethod = callingInfo.split("---")[1];
     }
 
+    public static boolean checkST(StackTraceElement st, String methodName) {
+        return null == st.getFileName() ||
+                "<Xposed>".equals(st.getFileName()) ||
+                st.getClassName().contains("EdHooker") ||
+                st.getClassName().contains("LSPosed") ||
+                methodName.equals(st.getMethodName());
+    }
 }

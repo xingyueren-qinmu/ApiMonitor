@@ -3,6 +3,8 @@ package com.softsec.mobsec.dae.apimonitor.hook.apis;
 import android.util.Base64;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 import com.softsec.mobsec.dae.apimonitor.util.Util;
@@ -14,17 +16,19 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class EncoderHook extends Hook {
 
+    public static final String TAG = "Base64";
+
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
-        logger.setTag("Base64");
-
         Method encodeMethod1 = Reflector.findMethod(Base64.class, "encode", byte[].class, int.class);
-        methodHookImpl.hookMethod(encodeMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(encodeMethod1, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 logger.recordAPICalling(param, "Base64编码",
@@ -34,11 +38,13 @@ public class EncoderHook extends Hook {
         });
 
         Method encodeMethod2 = Reflector.findMethod(Base64.class,"encode", byte[].class, int.class, int.class, int.class);
-        methodHookImpl.hookMethod(encodeMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(encodeMethod2, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 int from = (int) param.args[1], to = (int) param.args[2];
@@ -51,11 +57,13 @@ public class EncoderHook extends Hook {
         });
 
         Method encodeToStringMethod1 = Reflector.findMethod(Base64.class, "encodeToString", byte[].class, int.class);
-        methodHookImpl.hookMethod(encodeToStringMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(encodeToStringMethod1, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", (String) param.getResult());
                 logger.recordAPICalling(param, "Base64编码",
@@ -65,11 +73,13 @@ public class EncoderHook extends Hook {
         });
 
         Method encodeToStringMethod2 = Reflector.findMethod(Base64.class, "encodeToString", byte[].class, int.class, int.class, int.class);
-        methodHookImpl.hookMethod(encodeToStringMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(encodeToStringMethod2, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 int from = (int) param.args[1], to = (int) param.args[2];
@@ -82,11 +92,13 @@ public class EncoderHook extends Hook {
         });
 
         Method decodeMethod1 = Reflector.findMethod(Base64.class, "decode", String.class, int.class);
-        methodHookImpl.hookMethod(decodeMethod1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(decodeMethod1, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 logger.recordAPICalling(param, "Base64解码",
@@ -96,11 +108,13 @@ public class EncoderHook extends Hook {
         });
 
         Method decodeMethod2 = Reflector.findMethod(Base64.class,"decode", byte[].class, int.class, int.class, int.class);
-        methodHookImpl.hookMethod(decodeMethod2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(decodeMethod2, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 int from = (int) param.args[1], to = (int) param.args[2];
@@ -114,11 +128,13 @@ public class EncoderHook extends Hook {
 
 
         Method decodeMethod3 = Reflector.findMethod(Base64.class, "decode", byte[].class, int.class);
-        methodHookImpl.hookMethod(decodeMethod3, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(decodeMethod3, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String[] callingInfo = getCallingInfo();
-                logger.setCallingInfo(callingInfo[0]);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xref", callingInfo[1]);
                 logger.addRelatedAttrs("output", Util.byteArrayToString((byte[])param.getResult()));
                 logger.recordAPICalling(param, "Base64解码",

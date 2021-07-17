@@ -4,6 +4,8 @@ import android.util.Base64;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.CLogUtils;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -17,16 +19,16 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class NetStreamHook extends Hook {
-    public static final String TAG = "DAEAM_NetStream";
+    public static final String TAG = "NetStream";
 
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-        logger.setTag(TAG);
+
         XposedBridge.log("Hook 底层");
 
         try {
             Method socketOutputStreamMethod = Reflector.findMethod(XposedHelpers.findClass("java.net.SocketOutputStream", packageParam.classLoader), "write", byte[].class, int.class, int.class);
-            methodHookImpl.hookMethod(socketOutputStreamMethod, new MethodHookCallBack() {
+            MethodHookHandler.hookMethod(socketOutputStreamMethod, new MethodHookCallBack() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -36,8 +38,10 @@ public class NetStreamHook extends Hook {
                     String rawString = TraceString.toString().split("\n\r\n")[0];
                     Map<String, String> header = analyzeRequest(rawString);
                     String request_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP);
-                    String[] callingInfo = getCallingInfo();
-                    logger.setCallingInfo(callingInfo[0]);
+                    String[] callingInfo = getCallingInfo(param.method.getName());
+                    Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
 //                    logger.addRelatedAttrs("request_raw",request_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     logger.recordAPICalling(param, "Socket请求",
@@ -50,13 +54,13 @@ public class NetStreamHook extends Hook {
             });
         } catch (Throwable e) {
             XposedBridge.log("HookGetOutPushStream     " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
 
 
         try {
             Method socketInputStreamMethod = Reflector.findMethod(XposedHelpers.findClass("java.net.SocketInputStream", packageParam.classLoader), "read", byte[].class, int.class, int.class);
-            methodHookImpl.hookMethod(socketInputStreamMethod, new MethodHookCallBack() {
+            MethodHookHandler.hookMethod(socketInputStreamMethod, new MethodHookCallBack() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -67,8 +71,10 @@ public class NetStreamHook extends Hook {
                     Map<String, String> result = analyzeResponse(rawString);
                     // String rawResponse = Util.byteArrayToString((byte[]) param.args[0]);
                     String response_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP);
-                    String[] callingInfo = getCallingInfo();
-                    logger.setCallingInfo(callingInfo[0]);
+                    String[] callingInfo = getCallingInfo(param.method.getName());
+                    Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
 //                    logger.addRelatedAttrs("response_raw",response_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     logger.recordAPICalling(param, "Socket响应",
@@ -81,7 +87,7 @@ public class NetStreamHook extends Hook {
 
         } catch (Throwable e) {
             XposedBridge.log("HookGetInputStream     " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
     }
 

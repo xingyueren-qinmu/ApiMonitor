@@ -64,24 +64,24 @@ class ChooseAppActivity : AppCompatActivity() {
                 var canWrite = false
                 try {
                     val perms = packageManager.getPackageInfo(pkgName, PackageManager.GET_PERMISSIONS).requestedPermissions
-                    for (perm in perms)
-                        if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+                    for (perm in perms) {
+                        if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE") &&
+                            Build.VERSION.SDK_INT < 23) {
                             canWrite = true
                             break
                         }
+                    }
                 } catch(e: PackageManager.NameNotFoundException) {
                     removedApp.add(pkgName)
                     continue
                 }
                 sb.append(pkgName).append(";")
-                val writePerm = canWrite && Build.VERSION.SDK_INT < 23
-                val logDir = if (writePerm)
-                    Config.PATH_TESTING_LOG
-                else
+                // 记录日志位置，根据目标应用是否有写权限而视
+                val logDir = if (canWrite) Config.PATH_TESTING_LOG else
                     packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir + Config.PATH_TARGET_APP_LOG
                 val logFile = File(logDir + pkgName)
                 Util.execRootCmdWithResult("rm -rf ${logFile.parent}")
-                SharedPreferencesUtil.addAppToHook(pkgName, writePerm, logDir,
+                SharedPreferencesUtil.addAppToHook(pkgName, canWrite, logDir,
                     packageManager.getPackageInfo(pkgName, 0).applicationInfo.dataDir)
                 Log.i("logPath", logDir + pkgName)
             }

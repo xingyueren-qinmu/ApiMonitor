@@ -1,11 +1,11 @@
 package com.softsec.mobsec.dae.apimonitor.hook;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.RemoteException;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
@@ -19,7 +19,7 @@ public class XposedHide extends Hook {
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
         Method getStackTraceMethod = Reflector.findMethod(Thread.class, "getStackTrace");
-        methodHookImpl.hookMethod(getStackTraceMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(getStackTraceMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //                XposedBridge.log("getStackTrace");
@@ -46,7 +46,7 @@ public class XposedHide extends Hook {
 
         Method findClassMethod = Reflector.findMethod(ClassLoader.class, "findClass",
                 String.class);
-        methodHookImpl.hookMethod(findClassMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(findClassMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //                XposedBridge.log("findClass");
@@ -61,7 +61,7 @@ public class XposedHide extends Hook {
 
         Method loadClassMethod = Reflector.findMethod(ClassLoader.class, "loadClass",
                 String.class);
-        methodHookImpl.hookMethod(loadClassMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(loadClassMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //                XposedBridge.log("loadClass");
@@ -78,10 +78,10 @@ public class XposedHide extends Hook {
             String xposedServiceName = "user.xposed.system";
             Method getServiceMethod = Reflector.findMethod(
                     "android.os.ServiceManager",
-                    ClassLoader.getSystemClassLoader(),
+                    packageParam.classLoader,
                     "getService",
                     String.class);
-            methodHookImpl.hookMethod(getServiceMethod, new MethodHookCallBack() {
+            MethodHookHandler.hookMethod(getServiceMethod, new MethodHookCallBack() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     String serviceName = (String) param.args[0];
@@ -95,7 +95,7 @@ public class XposedHide extends Hook {
 
 
         } catch (NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
 
 

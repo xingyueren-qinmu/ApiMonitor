@@ -18,7 +18,7 @@ public class CLogUtils {
 
 	private static String TAG = "XposedInfo";
 	private static String NETTAGORI = "XposedNet";
-	private static String NetTAG = "DAEAM_OkHttpHookInterceptor";
+	private static String NetTAG = "OkHttpHookInterceptor";
 
 	private static final Logger logger = new Logger();
 

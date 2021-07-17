@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.util.Base64;
 import android.util.Log;
 
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -76,20 +78,20 @@ public class Util {
             }
             p.waitFor();
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.logError(e);
         } finally {
             if (dos != null) {
                 try {
                     dos.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
             if (dis != null) {
                 try {
                     dis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }
@@ -114,20 +116,20 @@ public class Util {
             p.waitFor();
             exitValue = p.exitValue();
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.logError(e);
         } finally {
             if (dos != null) {
                 try {
                     dos.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
             if (dis != null) {
                 try {
                     dis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
         }

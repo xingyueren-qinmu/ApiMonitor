@@ -6,6 +6,8 @@ import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.ShutterCallback;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -15,19 +17,21 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class CameraHook extends Hook {
 
-	public static final String TAG = "DAEAM_Camera:";
+	public static final String TAG = "Camera:";
 
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
-		logger.setTag(TAG);
+
 		Method takePictureMethod = Reflector.findMethod(Camera.class, "takePicture",
 				ShutterCallback.class, PictureCallback.class, PictureCallback.class, PictureCallback.class);
-		methodHookImpl.hookMethod(takePictureMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(takePictureMethod, new MethodHookCallBack() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄照片");
@@ -37,11 +41,13 @@ public class CameraHook extends Hook {
 
 		Method setPreviewCallbackMethod = Reflector.findMethod(Camera.class,
 				"setPreviewCallback", PreviewCallback.class);
-		methodHookImpl.hookMethod(setPreviewCallbackMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(setPreviewCallbackMethod, new MethodHookCallBack() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");
@@ -50,11 +56,13 @@ public class CameraHook extends Hook {
 
 		Method setPreviewCallbackWithBufferMethod = Reflector.findMethod(Camera.class,
 				"setPreviewCallbackWithBuffer", PreviewCallback.class);
-		methodHookImpl.hookMethod(setPreviewCallbackWithBufferMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(setPreviewCallbackWithBufferMethod, new MethodHookCallBack() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");
@@ -63,11 +71,13 @@ public class CameraHook extends Hook {
 
 		Method setOneShotPreviewCallbackMethod = Reflector.findMethod(Camera.class,
 				"setOneShotPreviewCallback", PreviewCallback.class);
-		methodHookImpl.hookMethod(setOneShotPreviewCallbackMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(setOneShotPreviewCallbackMethod, new MethodHookCallBack() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "拍摄视频");

@@ -1,15 +1,11 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
 
-import com.softsec.mobsec.dae.apimonitor.hook.XposedModule;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.robv.android.xposed.XposedBridge;
 
 public class Reflector {
 
@@ -47,7 +43,7 @@ public class Reflector {
             method.setAccessible(true);
             return method;
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -72,7 +68,7 @@ public class Reflector {
             constructor.setAccessible(true);
             return constructor;
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -84,7 +80,7 @@ public class Reflector {
             return field.getInt(obj);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return -1;
     }
@@ -96,7 +92,7 @@ public class Reflector {
             return field.get(obj);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }

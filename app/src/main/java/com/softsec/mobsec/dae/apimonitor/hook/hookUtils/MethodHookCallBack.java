@@ -1,8 +1,5 @@
 package com.softsec.mobsec.dae.apimonitor.hook.hookUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,10 +20,9 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
     }
 
     //调用栈
-    protected String[] getCallingInfo() {
+    protected String[] getCallingInfo(String methodName) {
         Throwable ex = new Throwable();
         StackTraceElement[] stackElements = ex.getStackTrace();
-
         String[] result = new String[2];
         result[0] = "";
         result[1] = "";
@@ -45,7 +41,7 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         StringBuilder sb = new StringBuilder();
         boolean f = false;
         for(StackTraceElement st : stackElements) {
-            if(!f && "<Xposed>".equals(st.getFileName())) {
+            if(!f && Logger.checkST(st, methodName)) {
                 sb.append(st.getClassName()).append('.').append(st.getMethodName()).append(';');
                 f = !f;
                 continue;
@@ -65,14 +61,12 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         }
 
         result[1] = sb.toString();
-
         return result;
     }
 
 
-
 //    //调用栈
-//    protected String getCallingInfo() {
+//    protected String getCallingInfo(param.method.getName()) {
 //        Throwable ex = new Throwable();
 //        StackTraceElement[] stackElements = ex.getStackTrace();
 //

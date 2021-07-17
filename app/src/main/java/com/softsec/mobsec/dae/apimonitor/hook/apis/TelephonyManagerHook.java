@@ -6,10 +6,11 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
-import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
@@ -20,7 +21,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class TelephonyManagerHook extends Hook {
 
-	public static final String TAG = "DAEAM_TelephonyManager";
+	public static final String TAG = "TelephonyManager";
 	public static Map<String, String> map = new HashMap<>((int)Math.ceil(10 / 0.75));
 
 	static {
@@ -38,14 +39,18 @@ public class TelephonyManagerHook extends Hook {
 
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-		logger.setTag(TAG);
+
+
+
 
 		Method getLine1Numbermethod = Reflector.findMethod(TelephonyManager.class, "getLine1Number");
-		methodHookImpl.hookMethod(getLine1Numbermethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(getLine1Numbermethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.addRelatedAttrs("result", (String)param.getResult());
@@ -55,7 +60,7 @@ public class TelephonyManagerHook extends Hook {
 
 		Method listenMethod = Reflector.findMethod(TelephonyManager.class,
 				"listen", PhoneStateListener.class,int.class);
-		methodHookImpl.hookMethod(listenMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(listenMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
@@ -76,7 +81,9 @@ public class TelephonyManagerHook extends Hook {
 				if((eventNo & PhoneStateListener.LISTEN_CELL_LOCATION) != 0){
 					eventStr = "LISTEN_SERVICE_STATE";
 				}
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "监听手机信息",
@@ -87,11 +94,13 @@ public class TelephonyManagerHook extends Hook {
 
 		//　获取设备id
 		Method telphonyManager_getDeviceIdMethod = Reflector.findMethod(TelephonyManager.class, "getDeviceId");
-		methodHookImpl.hookMethod(telphonyManager_getDeviceIdMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(telphonyManager_getDeviceIdMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.addRelatedAttrs("result", (String)param.getResult());
@@ -102,11 +111,13 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取IMSI
 		Method telphonyManager_getSubscriberIdMethod = Reflector.findMethod(TelephonyManager.class, "getSubscriberId");
-		methodHookImpl.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(telphonyManager_getSubscriberIdMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.addRelatedAttrs("result", (String)param.getResult());
@@ -116,12 +127,14 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取手机位置
 		Method telphonyManager_getCellLocationMethod = Reflector.findMethod(TelephonyManager.class, "getCellLocation");
-		methodHookImpl.hookMethod(telphonyManager_getCellLocationMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(telphonyManager_getCellLocationMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
 				CellLocation location = (CellLocation)param.getResult();
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "获取基站位置");
@@ -130,11 +143,13 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取系统ID
 		Method cdmaLocation_getSystemId = Reflector.findMethod(CdmaCellLocation.class, "getSystemId");
-		methodHookImpl.hookMethod(cdmaLocation_getSystemId, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(cdmaLocation_getSystemId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -145,11 +160,13 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取网络ID
 		Method cdmaLocation_getNetworkId = Reflector.findMethod(CdmaCellLocation.class, "getNetworkId");
-		methodHookImpl.hookMethod(cdmaLocation_getNetworkId, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(cdmaLocation_getNetworkId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -159,11 +176,13 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获取基站ID
 		Method cdmaLocation_getBaseStationId = Reflector.findMethod(CdmaCellLocation.class, "getBaseStationId");
-		methodHookImpl.hookMethod(cdmaLocation_getBaseStationId, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(cdmaLocation_getBaseStationId, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -173,11 +192,13 @@ public class TelephonyManagerHook extends Hook {
 
 		// 获得cell id
 		Method gsmLocation_getCidMethod = Reflector.findMethod(GsmCellLocation.class, "getCid");
-		methodHookImpl.hookMethod(gsmLocation_getCidMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(gsmLocation_getCidMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -188,11 +209,13 @@ public class TelephonyManagerHook extends Hook {
 
 		//获得gsm地区代号
 		Method gsmLocation_getLacMethod = Reflector.findMethod(GsmCellLocation.class, "getLac");
-		methodHookImpl.hookMethod(gsmLocation_getLacMethod, new MethodHookCallBack() {
+		MethodHookHandler.hookMethod(gsmLocation_getLacMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				super.afterHookedMethod(param);
-				String[] callingInfo = getCallingInfo();
+				String[] callingInfo = getCallingInfo(param.method.getName());
+				Logger logger = new Logger();
+				logger.setTag(TAG);
 				logger.setCallingInfo(callingInfo[0]);
 				logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -203,11 +226,13 @@ public class TelephonyManagerHook extends Hook {
 		// 获得运营商信息
 		Method getSimCarrierIdMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierId");
 		if(getSimCarrierIdMethod != null) {
-			methodHookImpl.hookMethod(getSimCarrierIdMethod, new MethodHookCallBack() {
+			MethodHookHandler.hookMethod(getSimCarrierIdMethod, new MethodHookCallBack() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					super.afterHookedMethod(param);
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("result", String.valueOf((int)param.getResult()));
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -220,11 +245,13 @@ public class TelephonyManagerHook extends Hook {
 		if(Build.VERSION.SDK_INT >= 28) {
 			Method getSimCarrierIdNameMethod = Reflector.findMethod(TelephonyManager.class, "getSimCarrierIdName");
 			if(getSimCarrierIdNameMethod != null) {
-				methodHookImpl.hookMethod(getSimCarrierIdNameMethod, new MethodHookCallBack() {
+				MethodHookHandler.hookMethod(getSimCarrierIdNameMethod, new MethodHookCallBack() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						super.afterHookedMethod(param);
-						String[] callingInfo = getCallingInfo();
+						String[] callingInfo = getCallingInfo(param.method.getName());
+						Logger logger = new Logger();
+						logger.setTag(TAG);
 						logger.setCallingInfo(callingInfo[0]);
 						logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 						logger.recordAPICalling(param, "获取运营商");
@@ -235,10 +262,12 @@ public class TelephonyManagerHook extends Hook {
 
 		try {
 			Method getSimOperatorMethod = Reflector.findMethod(TelephonyManager.class, "getSimOperator");
-			methodHookImpl.hookMethod(getSimOperatorMethod, new MethodHookCallBack() {
+			MethodHookHandler.hookMethod(getSimOperatorMethod, new MethodHookCallBack() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					String[] callingInfo = getCallingInfo();
+					String[] callingInfo = getCallingInfo(param.method.getName());
+					Logger logger = new Logger();
+					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					String operator = map.get((String)param.getResult());
@@ -247,7 +276,7 @@ public class TelephonyManagerHook extends Hook {
 				}
 			});
 		} catch (Exception e) {
-			Log.e("获取运营商错误", e.getMessage());
+			Logger.logError(e);
 		}
 	}
 }

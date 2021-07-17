@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -14,7 +16,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class ContextImplHook extends Hook {
 
-	public static final String TAG = "DAEAM_ContextImpl";
+	public static final String TAG = "ContextImpl";
 	
 	private String descIntentFilter(IntentFilter intentFilter) {
 		StringBuilder sb = new StringBuilder();
@@ -31,17 +33,19 @@ public class ContextImplHook extends Hook {
 	@Override
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
-		logger.setTag(TAG);
+
 		try {
 			Method registerReceiverMethod = Reflector.findMethod(
-					"android.app.ContextImpl", ClassLoader.getSystemClassLoader(),
+					"android.app.ContextImpl", packageParam.classLoader,
 					"registerReceiver", BroadcastReceiver.class, IntentFilter.class);
-			methodHookImpl.hookMethod(registerReceiverMethod, new MethodHookCallBack() {
+			MethodHookHandler.hookMethod(registerReceiverMethod, new MethodHookCallBack() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					if(param.args[1] != null){
 						String intentstr = descIntentFilter((IntentFilter) param.args[1]);
-						String[] callingInfo = getCallingInfo();
+						String[] callingInfo = getCallingInfo(param.method.getName());
+						Logger logger = new Logger();
+						logger.setTag(TAG);
 						logger.setCallingInfo(callingInfo[0]);
 						logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 						logger.recordAPICalling(param, "注册广播接收器","IntentFilter", intentstr);
@@ -49,7 +53,7 @@ public class ContextImplHook extends Hook {
 				}
 			});
 		} catch (NoSuchMethodException | ClassNotFoundException e) {
-			logger.logError(e);
+			Logger.logError(e);
 		}
 	}
 }

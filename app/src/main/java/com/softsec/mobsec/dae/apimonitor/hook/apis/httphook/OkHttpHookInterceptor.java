@@ -9,6 +9,8 @@ import android.util.Base64;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.CLogUtils;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.LogInterceptorImp;
@@ -72,7 +74,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
     private Object mProxyInstance;
 
     private static int flag = 0;
-    public static final String TAG = "DAEAM_OkHttpHookInterceptor";
+    public static final String TAG = "OkHttpHookInterceptor";
 //    private static Vector<StringBuilder> QoSstringbuilder = new Vector<>();
 //    private static Vector<Integer> QoS = new Vector<>();  // 1为response 2为request
     private static Queue<String> queue = new ConcurrentLinkedQueue<String>();
@@ -82,7 +84,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
     @Override
     public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
-        logger.setTag(TAG);
+
 
         HookLoadClass();
         HookAttach();
@@ -91,7 +93,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
     //获取应用自己所有的classloader，防止应用加固
     private void HookLoadClass(){
-        methodHookImpl.hookAllMethods(ClassLoader.class, "loadClass", new MethodHookCallBack() {
+        MethodHookHandler.hookAllMethods(ClassLoader.class, "loadClass", new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -116,7 +118,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
     */
     private void HookAttach(){
         Method attachMethod = Reflector.findMethod(Application.class, "attach", Context.class);
-        methodHookImpl.hookMethod(attachMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(attachMethod, new MethodHookCallBack() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
@@ -241,7 +243,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         try {
             Method socketOutputStreamMethod = Reflector.findMethod(XposedHelpers.findClass("java.net.SocketOutputStream", mLoader), "write", byte[].class, int.class, int.class);
-            methodHookImpl.hookMethod(socketOutputStreamMethod, new MethodHookCallBack() {
+            MethodHookHandler.hookMethod(socketOutputStreamMethod, new MethodHookCallBack() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -251,7 +253,9 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                     Map<String, String> header = analyzeRequest(rawString);
 //                    String rawRequest = Util.byteArrayToString((byte[]) param.args[0]);
                     String request_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP|Base64.NO_PADDING|Base64.URL_SAFE);
-                    String[] callingInfo = getCallingInfo();
+                    String[] callingInfo = getCallingInfo(param.method.getName());
+                    Logger logger = new Logger();
+                    logger.setTag(TAG);
                     logger.setCallingInfo(callingInfo[0]);
                     logger.addRelatedAttrs("request_raw",request_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
@@ -266,13 +270,13 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         } catch (Throwable e) {
             XposedBridge.log("HookGetOutPushStream     " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
 
 
         try {
             Method socketInputStreamMethod = Reflector.findMethod(XposedHelpers.findClass("java.net.SocketInputStream", mLoader), "read", byte[].class, int.class, int.class);
-            methodHookImpl.hookMethod(socketInputStreamMethod, new MethodHookCallBack() {
+            MethodHookHandler.hookMethod(socketInputStreamMethod, new MethodHookCallBack() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -283,8 +287,10 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
 //                    String rawResponse = Util.byteArrayToString((byte[]) param.args[0]);
                     String response_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP|Base64.NO_PADDING|Base64.URL_SAFE);
-                    String[] callingInfo = getCallingInfo();
-                    logger.setCallingInfo(callingInfo[0]);
+                    String[] callingInfo = getCallingInfo(param.method.getName());
+                    Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                     logger.addRelatedAttrs("response_raw",response_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     logger.recordAPICalling(param, "Socket响应",
@@ -296,7 +302,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         } catch (Throwable e) {
             XposedBridge.log("HookGetInputStream     " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
     }
 
@@ -389,7 +395,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (Throwable e) {
             XposedBridge.log("getAllClassName   Throwable   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
     }
 
@@ -453,7 +459,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                 try {
                     aClass = Class.forName(className, false, mLoader);
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
                 if (aClass != null) {
                     return aClass;
@@ -470,7 +476,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                         }
                     }
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Logger.logError(e);
                 }
             }
 
@@ -500,7 +506,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                 }
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         XposedBridge.log("没找到client ");
     }
@@ -532,7 +538,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (Throwable e) {
             XposedBridge.log("isClient error " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         // mFieldArrayList.clear();
         return false;
@@ -575,7 +581,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                 return true;
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -623,7 +629,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                         });
             } catch (Throwable e) {
                 XposedBridge.log("findAndHookConstructor OkHttpClient error " + e.toString());
-                e.printStackTrace();
+                Logger.logError(e);
             }
         }
 
@@ -764,7 +770,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         } catch (Throwable e) {
             XposedBridge.log("getHttpLoggingInterceptor  拦截器初始化出现异常    " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -867,7 +873,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         } catch (Throwable e) {
             XposedBridge.log("initLoggingInterceptor 动态加载异常  " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
 
@@ -941,10 +947,10 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (NoSuchFieldException e) {
             XposedBridge.log("AddElements  NoSuchFieldException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (IllegalAccessException e) {
             XposedBridge.log("AddElements  IllegalAccessException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -976,10 +982,10 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (NoSuchFieldException e) {
             XposedBridge.log("AddElements  NoSuchFieldException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (IllegalAccessException e) {
             XposedBridge.log("AddElements  IllegalAccessException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -1019,10 +1025,10 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (NoSuchFieldException e) {
             XposedBridge.log("SetDexElements  NoSuchFieldException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         } catch (IllegalAccessException e) {
             XposedBridge.log("SetDexElements  IllegalAccessException   " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -1075,7 +1081,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                 }
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -1108,7 +1114,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
                 XposedBridge.log("没有找到 mHttpLoggingInterceptorLoggerClass 和 mHttpLoggingInterceptorLoggerEnum");
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -1140,7 +1146,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
 
         } catch (Throwable e) {
             XposedBridge.log("拦截器初始化出现异常  InitInterceptor2  " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }
@@ -1191,7 +1197,7 @@ public class OkHttpHookInterceptor extends Hook implements InvocationHandler {
             }
         } catch (Throwable e) {
             XposedBridge.log("getHttpLoggingInterceptorImp error " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return null;
     }

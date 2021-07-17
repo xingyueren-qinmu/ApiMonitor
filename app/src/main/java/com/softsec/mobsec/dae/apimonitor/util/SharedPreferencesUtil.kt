@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 class SharedPreferencesUtil {
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         lateinit var context : Context
         lateinit var sp : SharedPreferences
 

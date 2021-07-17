@@ -3,6 +3,8 @@ package com.softsec.mobsec.dae.apimonitor.hook.apis;
 import android.content.ContextWrapper;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
@@ -16,14 +18,14 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class FileSystemHook extends Hook {
 
-    public static final String TAG = "DAEAM_FileSystem";
+    public static final String TAG = "FileSystem";
 
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-        logger.setTag(TAG);
+
 
         Method openFileOutputMethod = Reflector.findMethod(ContextWrapper.class, "openFileOutput", String.class, "int");
-        methodHookImpl.hookMethod(openFileOutputMethod, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(openFileOutputMethod, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String name = (String) param.args[0];
@@ -43,13 +45,15 @@ public class FileSystemHook extends Hook {
                         default:
                             m = "?";
                     }
+                    Logger logger = new Logger();
+                    logger.setTag(TAG);
                     logger.recordAPICalling(param, "输出到文件", "filename", name, "mod", m);
                 }
             }
         });
 
         Constructor fileConstructor1 = Reflector.findConstructor(File.class, String.class);
-        methodHookImpl.hookMethod(fileConstructor1, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(fileConstructor1, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String filePath = (String) param.args[0];
@@ -57,7 +61,9 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                     if(((File)param.thisObject).isFile()) {
-                        String[] callingInfo = getCallingInfo();
+                        String[] callingInfo = getCallingInfo(param.method.getName());
+                        Logger logger = new Logger();
+                        logger.setTag(TAG);
                         logger.setCallingInfo(callingInfo[0]);
                         logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件", "filepath", filePath);
@@ -67,7 +73,7 @@ public class FileSystemHook extends Hook {
 
 
         Constructor fileConstructor2 = Reflector.findConstructor(File.class, String.class, String.class);
-        methodHookImpl.hookMethod(fileConstructor2, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(fileConstructor2, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String filedir = (String) param.args[0];
@@ -76,8 +82,10 @@ public class FileSystemHook extends Hook {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else
                      if(((File)param.thisObject).isFile()) {
-                         String[] callingInfo = getCallingInfo();
-                         logger.setCallingInfo(callingInfo[0]);
+                         String[] callingInfo = getCallingInfo(param.method.getName());
+                         Logger logger = new Logger();
+				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
                          logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                          logger.recordAPICalling(param, "打开文件", "filedir", filedir, "filename", fileName);
                      }
@@ -85,7 +93,7 @@ public class FileSystemHook extends Hook {
         });
 
         Constructor fileConstructor3 = Reflector.findConstructor(File.class, File.class, String.class);
-        methodHookImpl.hookMethod(fileConstructor3, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(fileConstructor3, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -95,7 +103,9 @@ public class FileSystemHook extends Hook {
                     if (fileDir.getAbsolutePath().contains("DAEAM") || fileName.contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
-                        String[] callingInfo = getCallingInfo();
+                        String[] callingInfo = getCallingInfo(param.method.getName());
+                        Logger logger = new Logger();
+                        logger.setTag(TAG);
                         logger.setCallingInfo(callingInfo[0]);
                         logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件",
@@ -108,7 +118,7 @@ public class FileSystemHook extends Hook {
 
 
         Constructor fileConstructor4 = Reflector.findConstructor(File.class, URI.class);
-        methodHookImpl.hookMethod(fileConstructor4, new MethodHookCallBack() {
+        MethodHookHandler.hookMethod(fileConstructor4, new MethodHookCallBack() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -117,7 +127,9 @@ public class FileSystemHook extends Hook {
                     if (uri.toString().contains("DAEAM")) {
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     } else if(((File)param.thisObject).isFile()) {
-                        String[] callingInfo = getCallingInfo();
+                        String[] callingInfo = getCallingInfo(param.method.getName());
+                        Logger logger = new Logger();
+                        logger.setTag(TAG);
                         logger.setCallingInfo(callingInfo[0]);
                         logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "打开文件", "uri", uri.toString());

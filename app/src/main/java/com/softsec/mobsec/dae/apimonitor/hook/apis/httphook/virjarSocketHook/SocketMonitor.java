@@ -8,6 +8,7 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.for
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.formatter.HttpBaseFormatter;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.formatter.HttpChunckAggregateFormatter;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.observer.EventObserver;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.io.InputStream;
@@ -91,8 +92,8 @@ public class SocketMonitor {
                     continue;
                 }
                 eventFormatter.formatEvent(socketPackEvent);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+            } catch (Throwable e) {
+                Logger.logError(e);
             }
         }
 
@@ -100,8 +101,8 @@ public class SocketMonitor {
         for (EventObserver eventObserver : socketEventObserver) {
             try {
                 eventObserver.onSocketPackageArrival(socketPackEvent);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+            } catch (Throwable e) {
+                Logger.logError(e);
             }
         }
 

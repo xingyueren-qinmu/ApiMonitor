@@ -42,7 +42,7 @@ class IsExactnessis {
                     && mClass.getName().contains("$");
         } catch (Throwable e) {
             XposedBridge.log("isChain error " + e.getMessage());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -86,7 +86,7 @@ class IsExactnessis {
 
         } catch (Throwable e) {
             XposedBridge.log("isRequest error " + e.getMessage());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -117,7 +117,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isRequestBodyClass error "+e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -156,7 +156,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isMediaTypeClass error " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -201,7 +201,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isHttpUrlClass error "+e.toString() );
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -220,7 +220,7 @@ class IsExactnessis {
         } catch (Throwable e) {
             XposedBridge.log("isHeaderClass error "+e.toString());
 
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -256,7 +256,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isBufferClass error "+e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -277,7 +277,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isBufferedSinkClass error "+e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -346,7 +346,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isGzipSourceClass error " + e.getMessage());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -376,7 +376,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isSourceClass 失败 " + e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -400,7 +400,7 @@ class IsExactnessis {
         } catch (Throwable e) {
             XposedBridge.log("isResponseBodyClass error "+e.toString());
 
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -421,7 +421,7 @@ class IsExactnessis {
             }
         } catch (Throwable e) {
             XposedBridge.log("isConnection error "+e.toString());
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -462,7 +462,7 @@ class IsExactnessis {
         } catch (Throwable e) {
             XposedBridge.log("isProtocol error "+e.toString());
 
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
@@ -491,7 +491,7 @@ class IsExactnessis {
         } catch (Throwable e) {
             XposedBridge.log("isRouteClass error "+e.toString());
 
-            e.printStackTrace();
+            Logger.logError(e);
         }
         return false;
     }
