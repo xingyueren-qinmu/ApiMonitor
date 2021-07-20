@@ -41,7 +41,7 @@ public class Util {
                     sb.append('.');
                 }
             }
-            out = sb.toString();
+            out = sb.toString().replace("\n","");
 
         } else {
             out = Base64.encodeToString(input, Base64.NO_WRAP);

@@ -30,8 +30,11 @@ public class OkHttpHook extends Hook {
                 MethodHookHandler.hookMethod(openMethod, new MethodHookCallBack() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        String[] callingInfo = getCallingInfo(param.method.getName());
                         Logger logger = new Logger();
                         logger.setTag(TAG);
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         if (param.args[0] != null) {
                             URI uri = (URI) param.args[0];
                             logger.recordAPICalling(param, "okhttp请求", "URL", uri.toString());

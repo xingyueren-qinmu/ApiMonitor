@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
@@ -31,15 +32,20 @@ public class IPCHook extends Hook {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent[] it = (Intent[]) param.args[0];
                 StringBuilder sb = new StringBuilder();
-                for(Intent i : it) {
+                for (Intent i : it) {
                     sb.append(i).append(",");
                 }
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "打开其他Activity",
                         "activities", sb.toString().substring(0, sb.length() - 1));
             }
         });
+
+
 
         Method startServiceMethod = Reflector.findMethod(ContextWrapper.class, "startService", Intent.class);
         MethodHookHandler.hookMethod(startServiceMethod, new MethodHookCallBack() {
@@ -48,9 +54,14 @@ public class IPCHook extends Hook {
                 Intent intent = (Intent) param.args[0];
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "打开其他服务", "Intent", intent.toString());
             }
         });
+
+
 
         Method startActivityMethod1 = Reflector.findMethod(ContextWrapper.class, "startActivity",
                 Intent.class, Bundle.class);
@@ -60,9 +71,14 @@ public class IPCHook extends Hook {
                 Intent intent = (Intent) param.args[0];
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "打开其他服务", "Intent", intent.toString());
             }
         });
+
+
 
         //Method Method = Reflector.findMethod()(ContextWrapper.class, "startActivity",
         Method startActivityMethod2 = Reflector.findMethod(Activity.class, "startActivity",
@@ -73,9 +89,14 @@ public class IPCHook extends Hook {
                 Intent intent = (Intent) param.args[0];
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "打开其他应用", "Intent", intent.toString());
             }
         });
+
+
 
         Method sendBroadcastMethod1 = Reflector.findMethod(ContextWrapper.class, "sendBroadcast",
                 Intent.class);
@@ -85,9 +106,14 @@ public class IPCHook extends Hook {
                 Intent intent = (Intent) param.args[0];
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
+
+
 
         Method sendBroadcastMethod2 = Reflector.findMethod(ContextWrapper.class, "sendBroadcast",
                 Intent.class, String.class);
@@ -97,9 +123,14 @@ public class IPCHook extends Hook {
                 Intent intent = (Intent) param.args[0];
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "发送广播", "Intent", intent.toString());
             }
         });
+
+
 
         Method registerReceiverMethod1 = Reflector.findMethod(ContextWrapper.class, "registerReceiver",
                 BroadcastReceiver.class, IntentFilter.class);
@@ -114,9 +145,14 @@ public class IPCHook extends Hook {
                 }
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
+
+
 
         Method registerReceiverMethod2 = Reflector.findMethod(ContextWrapper.class, "registerReceiver",
                 BroadcastReceiver.class, IntentFilter.class, String.class, Handler.class);
@@ -135,9 +171,13 @@ public class IPCHook extends Hook {
                 }
                 Logger logger = new Logger();
                 logger.setTag(TAG);
+                String[] callingInfo = getCallingInfo(param.method.getName());
+                logger.setCallingInfo(callingInfo[0]);
+                logger.addRelatedAttrs("xrefFrom",callingInfo[1]);
                 logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
+
 
     }
 }

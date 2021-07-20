@@ -31,8 +31,8 @@ public class PackageManagerHook extends Hook {
 					Uri uri = (Uri) param.args[0];
 					String[] callingInfo = getCallingInfo(param.method.getName());
 					Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+					logger.setTag(TAG);
+					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param, "安装应用", "installAPK", uri.toString());
 				}

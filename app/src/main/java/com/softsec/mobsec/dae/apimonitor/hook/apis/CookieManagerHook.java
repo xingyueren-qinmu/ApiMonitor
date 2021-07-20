@@ -33,8 +33,8 @@ public class CookieManagerHook extends Hook {
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                             String[] callingInfo = getCallingInfo(param.method.getName());
                             Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                            logger.setTag(TAG);
+                            logger.setCallingInfo(callingInfo[0]);
                             logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                             logger.recordAPICalling(param, "获取Cookie",
                                     "url", (String)param.args[0]);
@@ -43,7 +43,7 @@ public class CookieManagerHook extends Hook {
                 }
             });
         } catch (Exception e) {
-            Log.e("Cookie获取错误", e.getMessage());
+            Logger.logError(e);
         }
     }
 }

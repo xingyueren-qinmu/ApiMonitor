@@ -26,7 +26,6 @@ public class ActivityThreadHook extends Hook {
 					packageParam.classLoader,
 					"handleReceiver", receiverDataClass);
 			MethodHookHandler.hookMethod(handleReceiverMethod, new MethodHookCallBack() {
-
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //					logger.recordAPICalling(param, "接收器");

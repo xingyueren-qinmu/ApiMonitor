@@ -36,7 +36,6 @@ public class HttpHook extends Hook {
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
 
-
         try {
             Class<?> httpUrlConnectionClass = Reflector.findClass("java.net.HttpURLConnection", loadPackageParam.classLoader);
             MethodHookHandler.hookAllConstructors(httpUrlConnectionClass, new MethodHookCallBack() {
@@ -44,8 +43,8 @@ public class HttpHook extends Hook {
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     String[] callingInfo = getCallingInfo(param.method.getName());
                     Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                    logger.setTag(TAG);
+                    logger.setCallingInfo(callingInfo[0]);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     if (param.args.length == 1 && param.args[0].getClass() == URL.class) {
                         logger.recordAPICalling(param, "网络通信",  "url", param.args[0].toString());
@@ -63,13 +62,12 @@ public class HttpHook extends Hook {
                 URL url = (URL)param.thisObject;
                 String[] callingInfo = getCallingInfo(param.method.getName());
                 Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                logger.setTag(TAG);
+                logger.setCallingInfo(callingInfo[0]);
                 logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                 logger.recordAPICalling(param, "网络通信", "url", url.toString());
             }
         });
-
 
 
     }

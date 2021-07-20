@@ -104,7 +104,6 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 
         findAndHookMethod("android.util.Log", lpparam.classLoader, "w",
                 String.class, String.class, new XC_MethodHook() {
-
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) {
                         if ("DAEAM".equals(param.args[0])) {

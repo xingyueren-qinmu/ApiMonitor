@@ -29,8 +29,11 @@ public class RuntimeHook extends Hook {
 					logs[i * 2] = "Command" + i;
 					logs[i * 2 + 1] = progs[i];
 				}
+				String[] callingInfo = getCallingInfo(param.method.getName());
 				Logger logger = new Logger();
 				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "执行命令", logs);
 			}
 		});

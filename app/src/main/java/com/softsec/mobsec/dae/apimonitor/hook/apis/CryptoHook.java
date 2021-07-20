@@ -1,5 +1,8 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
@@ -26,8 +29,10 @@ public class CryptoHook extends Hook {
     public static final String TAG = "Crypto";
     volatile Logger logger = new Logger();
 
+
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
+
 
         Constructor secretKeySpecConstructor = Reflector.findConstructor(SecretKeySpec.class, byte[].class, String.class);
         MethodHookHandler.hookMethod(secretKeySpecConstructor, new MethodHookCallBack() {
@@ -38,6 +43,7 @@ public class CryptoHook extends Hook {
                 }
             }
         });
+
 
         Method doFinalMethod = Reflector.findMethod(Cipher.class, "doFinal", byte[].class);
         MethodHookHandler.hookMethod(doFinalMethod, new MethodHookCallBack() {
@@ -59,6 +65,7 @@ public class CryptoHook extends Hook {
             }
         });
 
+
         Method getIVMethod = Reflector.findMethod(Cipher.class, "getIV");
         MethodHookHandler.hookMethod(getIVMethod, new MethodHookCallBack() {
             @Override
@@ -68,6 +75,8 @@ public class CryptoHook extends Hook {
                 }
             }
         });
+
+
 
         Constructor ivParameterSpecConstructor = Reflector.findConstructor(IvParameterSpec.class, byte[].class);
         MethodHookHandler.hookMethod(ivParameterSpecConstructor, new MethodHookCallBack() {
@@ -79,6 +88,8 @@ public class CryptoHook extends Hook {
             }
         });
 
+
+
         Method setSeedMethod = Reflector.findMethod(SecureRandom.class, "setSeed", byte[].class);
         MethodHookHandler.hookMethod(setSeedMethod, new MethodHookCallBack() {
             @Override
@@ -89,6 +100,8 @@ public class CryptoHook extends Hook {
             }
         });
 
+
+
         Method cipherGetInstanceMethod = Reflector.findMethod(Cipher.class, "getInstance", String.class);
         MethodHookHandler.hookMethod(cipherGetInstanceMethod, new MethodHookCallBack() {
             @Override
@@ -98,6 +111,8 @@ public class CryptoHook extends Hook {
                 }
             }
         });
+
+
 
         Constructor pbeKeySpecConstructor = Reflector.findConstructor(PBEKeySpec.class, char[].class, byte[].class, int.class, int.class);
         MethodHookHandler.hookMethod(pbeKeySpecConstructor, new MethodHookCallBack() {
@@ -114,5 +129,6 @@ public class CryptoHook extends Hook {
                 }
             }
         });
+
     }
 }
