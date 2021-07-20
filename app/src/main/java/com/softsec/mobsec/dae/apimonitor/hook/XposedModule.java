@@ -2,7 +2,6 @@ package com.softsec.mobsec.dae.apimonitor.hook;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.apis.AccountManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.ActivityManagerHook;

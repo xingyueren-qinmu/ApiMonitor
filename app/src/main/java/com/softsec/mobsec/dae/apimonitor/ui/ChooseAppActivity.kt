@@ -64,11 +64,13 @@ class ChooseAppActivity : AppCompatActivity() {
                 var canWrite = false
                 try {
                     val perms = packageManager.getPackageInfo(pkgName, PackageManager.GET_PERMISSIONS).requestedPermissions
-                    for (perm in perms) {
-                        if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE") &&
-                            Build.VERSION.SDK_INT < 23) {
-                            canWrite = true
-                            break
+                    if(null != perms) {
+                        for (perm in perms) {
+                            if (perm.contains("android.permission.WRITE_EXTERNAL_STORAGE") &&
+                                Build.VERSION.SDK_INT < 23) {
+                                canWrite = true
+                                break
+                            }
                         }
                     }
                 } catch(e: PackageManager.NameNotFoundException) {
