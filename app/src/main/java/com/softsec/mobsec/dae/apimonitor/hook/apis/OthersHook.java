@@ -27,8 +27,8 @@ public class OthersHook extends Hook {
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     String[] callingInfo = getCallingInfo(param.method.getName());
                     Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                    logger.setTag(TAG);
+                    logger.setCallingInfo(callingInfo[0]);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     String serial = (String)param.getResult();
                     logger.addRelatedAttrs("serial", null == serial ? "" : serial);
@@ -36,7 +36,7 @@ public class OthersHook extends Hook {
                 }
             });
         } catch (Exception e) {
-            Log.e("SN码", e.getMessage());
+            Logger.logError(e);
         }
 
         Method getStringMethod = Reflector.findMethod(Build.class, "getString", String.class);

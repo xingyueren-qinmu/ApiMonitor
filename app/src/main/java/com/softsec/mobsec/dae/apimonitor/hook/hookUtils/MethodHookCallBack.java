@@ -35,7 +35,8 @@ public abstract class MethodHookCallBack extends XC_MethodHook {
         String filterPkgRegex = "^(de\\.robv\\.android\\.xposed|" +
                 "com\\.softsec\\.mobsec\\.dae\\.apimonitor|" +
                 "java\\.lang\\.reflect\\.Proxy|" +
-                "\\$Proxy0)";
+                "\\$Proxy0|" +
+                "EdHooker)";
         Pattern pattern = Pattern.compile(filterPkgRegex);
 
         StringBuilder sb = new StringBuilder();

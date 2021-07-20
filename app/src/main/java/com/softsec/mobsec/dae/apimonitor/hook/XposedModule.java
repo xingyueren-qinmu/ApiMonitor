@@ -2,6 +2,7 @@ package com.softsec.mobsec.dae.apimonitor.hook;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.apis.AccountManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.ActivityManagerHook;
@@ -104,7 +105,6 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 
         findAndHookMethod("android.util.Log", lpparam.classLoader, "w",
                 String.class, String.class, new XC_MethodHook() {
-
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) {
                         if ("DAEAM".equals(param.args[0])) {

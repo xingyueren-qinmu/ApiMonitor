@@ -31,8 +31,11 @@ public class ProcessHook extends Hook {
                     if (uid == 10066) {
                         int debugFlags = (Integer) param.args[5];
                         param.args[5] = (debugFlags | 0x1);
+                        String[] callingInfo = getCallingInfo(param.method.getName());
                         Logger logger = new Logger();
                         logger.setTag(TAG);
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                         logger.recordAPICalling(param, "开启新进程", "debugFlags", String.valueOf(param.args[5]));
                     }
                 }

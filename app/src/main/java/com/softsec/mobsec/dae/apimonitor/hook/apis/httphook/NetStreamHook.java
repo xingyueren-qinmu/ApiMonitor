@@ -40,8 +40,8 @@ public class NetStreamHook extends Hook {
                     String request_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP);
                     String[] callingInfo = getCallingInfo(param.method.getName());
                     Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                    logger.setTag(TAG);
+                    logger.setCallingInfo(callingInfo[0]);
 //                    logger.addRelatedAttrs("request_raw",request_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     logger.recordAPICalling(param, "Socket请求",
@@ -73,8 +73,8 @@ public class NetStreamHook extends Hook {
                     String response_raw = Base64.encodeToString((byte[])param.args[0], Base64.NO_WRAP);
                     String[] callingInfo = getCallingInfo(param.method.getName());
                     Logger logger = new Logger();
-				logger.setTag(TAG);
-				logger.setCallingInfo(callingInfo[0]);
+                    logger.setTag(TAG);
+                    logger.setCallingInfo(callingInfo[0]);
 //                    logger.addRelatedAttrs("response_raw",response_raw);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
                     logger.recordAPICalling(param, "Socket响应",

@@ -41,8 +41,6 @@ public class TelephonyManagerHook extends Hook {
 	public void initAllHooks(XC_LoadPackage.LoadPackageParam packageParam) {
 
 
-
-
 		Method getLine1Numbermethod = Reflector.findMethod(TelephonyManager.class, "getLine1Number");
 		MethodHookHandler.hookMethod(getLine1Numbermethod, new MethodHookCallBack() {
 			@Override

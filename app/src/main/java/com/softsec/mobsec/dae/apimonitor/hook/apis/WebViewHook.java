@@ -24,8 +24,11 @@ public class WebViewHook extends Hook {
 			MethodHookHandler.hookMethod(loadUrlMethod, new MethodHookCallBack(){
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					String[] callingInfo = getCallingInfo(param.method.getName());
 					Logger logger = new Logger();
 					logger.setTag(TAG);
+					logger.setCallingInfo(callingInfo[0]);
+					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 					logger.recordAPICalling(param, "通过WebView加载URL", "URL", (String)param.args[0]);
 				}
 			});

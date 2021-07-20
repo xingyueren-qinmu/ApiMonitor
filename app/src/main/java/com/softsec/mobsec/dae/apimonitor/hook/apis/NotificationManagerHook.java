@@ -24,8 +24,11 @@ public class NotificationManagerHook extends Hook {
 		MethodHookHandler.hookMethod(notifyMethod, new MethodHookCallBack() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				String[] callingInfo = getCallingInfo(param.method.getName());
 				Logger logger = new Logger();
 				logger.setTag(TAG);
+				logger.setCallingInfo(callingInfo[0]);
+				logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
 				logger.recordAPICalling(param, "发送通知",  "notification", ((Notification) param.args[1]).toString());
 			}
 		});

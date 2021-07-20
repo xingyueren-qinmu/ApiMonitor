@@ -58,8 +58,12 @@ class MainActivity : AppCompatActivity() {
         SharedPreferencesUtil.context = applicationContext
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
-        if (ActivityCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)
+
+        if (ActivityCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+
+        if (ActivityCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
 
         // When the activity starts from notification, show the dialog.
         init(if (!intent.getBooleanExtra(Config.INTENT_FROM_NITIFICATION, false)) {
