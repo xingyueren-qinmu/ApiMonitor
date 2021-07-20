@@ -140,6 +140,8 @@ class MainService : Service() {
                         appLogFile.delete()
                         appLogFile.parentFile.delete()
                     }
+                    FileUtil.removeKey(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_DIR))
+                    FileUtil.removeKey(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_LOG_DIR))
                     SharedPreferencesUtil.clearAppInfos(app)
                     Config.MOD_DAE_TESTING = if(Config.MOD_DAE_TESTING_PKGNAME == app) {
                         Config.MOD_DAE_TESTING_PKGNAME = ""
