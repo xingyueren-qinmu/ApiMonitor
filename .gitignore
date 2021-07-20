@@ -20,10 +20,8 @@ out/
 # Gradle files
 .gradle/
 build/
-!app/build/
-app/build/*
 #!app/build/outputs/apk/debug/*.apk
-!app/build/outputs/apk/debug/app-debug.apk
+!app//outputs/apk/debug/app-debug.apk
 
 # Local configuration file (sdk path, etc)
 local.properties
