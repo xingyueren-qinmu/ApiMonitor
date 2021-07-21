@@ -1,12 +1,11 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis;
 
 import android.os.Build;
-import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
@@ -39,22 +38,32 @@ public class OthersHook extends Hook {
             Logger.logError(e);
         }
 
-        Method getStringMethod = Reflector.findMethod(Build.class, "getString", String.class);
-        MethodHookHandler.hookMethod(getStringMethod, new MethodHookCallBack() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if("ro.product.brand".equals(param.args[0])) {
-                    String[] callingInfo = getCallingInfo(param.method.getName());
-                    Logger logger = new Logger();
-                    logger.setTag(TAG);
-                    logger.setCallingInfo(callingInfo[0]);
-                    logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                    String brand = (String)param.getResult();
-                    logger.addRelatedAttrs("brand", null == brand ? "" : brand);
-                    logger.recordAPICalling(param, "获取设备名称");
+        try {
+            Method getMethod = Reflector.findMethod("SystemProperties", packageParam.classLoader,
+                    "get", String.class, String.class);
+            MethodHookHandler.hookMethod(getMethod, new MethodHookCallBack() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    if("ro.product.brand".equals(param.args[0])) {
+                        String[] callingInfo = getCallingInfo(param.method.getName());
+                        Logger logger = new Logger();
+                        logger.setTag(TAG);
+                        logger.setCallingInfo(callingInfo[0]);
+                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                        String key = (String)param.getResult();
+                        if("ro.product.device".equals(key)) {
+                            logger.recordAPICalling(param, "获取设备名称");
+                        } else {
+                            logger.recordAPICalling(param, "获取其他设备信息");
+                        }
+                    }
                 }
-            }
-        });
+            });
+
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

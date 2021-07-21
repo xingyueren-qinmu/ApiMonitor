@@ -140,8 +140,6 @@ class MainService : Service() {
                         appLogFile.delete()
                         appLogFile.parentFile.delete()
                     }
-                    FileUtil.removeKey(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_DIR))
-                    FileUtil.removeKey(SharedPreferencesUtil.getString(app + Config.SP_TARGET_APP_LOG_DIR))
                     SharedPreferencesUtil.clearAppInfos(app)
                     Config.MOD_DAE_TESTING = if(Config.MOD_DAE_TESTING_PKGNAME == app) {
                         Config.MOD_DAE_TESTING_PKGNAME = ""
@@ -157,27 +155,6 @@ class MainService : Service() {
             }
         }
     }
-
-//    private fun parseLog(file : File) {
-//        val tmp = File(file.parent + "/tmp")
-//        synchronized(tmp) {
-//            var size = -1
-//            tmp.writeText("{")
-//            val reader = file.bufferedReader()
-//            var buffer = CharArray(4 * 1024)
-//            while(reader.read(buffer).also { size = it } != -1) {
-//                var string = String(buffer).substring(0, size)
-//                if(size < 4 * 1024) {
-//                    string = string.substring(0, string.lastIndexOf(","))
-//                }
-//                tmp.appendText(string)
-//            }
-//            reader.close()
-//            tmp.appendText("}")
-//            tmp.copyTo(file, overwrite = true, bufferSize = 4 * 1024)
-//        }
-//    }
-
 
     override fun onDestroy() {
         super.onDestroy()

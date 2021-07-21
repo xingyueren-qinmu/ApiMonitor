@@ -7,19 +7,11 @@ import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author qinmu997
  */
 public class FileUtil {
-
-    private static volatile Map<String, File> fileMap;
-
-    static {
-        fileMap = new ConcurrentHashMap<>();
-    }
 
     @SuppressLint("SetWorldReadable")
     public static void fixSharedPreference() {
@@ -32,23 +24,14 @@ public class FileUtil {
 
     @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
     public static void writeToFile(String log, String absolutePath) {
-
         try {
-            if(!fileMap.containsKey(absolutePath)) {
-                synchronized (FileUtil.class) {
-                    if(!fileMap.containsKey(absolutePath)) {
-                        File file = new File(absolutePath);
-                        fileMap.put(absolutePath, file);
-                    }
-                }
-            }
-            File file = fileMap.get(absolutePath);
-            synchronized (file) {
+            synchronized (FileUtil.class) {
                 boolean f = false;
 
-                if (!file.exists()) {
+                File logFile = new File(absolutePath);
+                if (!logFile.exists()) {
 
-                    File path = new File(String.valueOf(file.getParentFile()));
+                    File path = new File(String.valueOf(logFile.getParentFile()));
                     path.setReadable(true, false);
                     path.setExecutable(true, false);
                     path.setWritable(true, false);
@@ -58,16 +41,16 @@ public class FileUtil {
                     path.setExecutable(true, false);
                     path.setWritable(true, false);
 
-                    file.createNewFile();
+                    logFile.createNewFile();
 
-                    file.setReadable(true, false);
-                    file.setExecutable(true, false);
-                    file.setWritable(true, false);
+                    logFile.setReadable(true, false);
+                    logFile.setExecutable(true, false);
+                    logFile.setWritable(true, false);
 
                     f = true;
                 }
 
-                FileOutputStream fos = new FileOutputStream(file, true);
+                FileOutputStream fos = new FileOutputStream(logFile, true);
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
 
                 if(f) {
@@ -83,12 +66,6 @@ public class FileUtil {
             }
         } catch (Exception e) {
             Logger.logError(e);
-        }
-    }
-
-    public static void removeKey(String absolutePath) {
-        synchronized (FileUtil.class) {
-            fileMap.remove(absolutePath);
         }
     }
 }
