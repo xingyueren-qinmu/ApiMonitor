@@ -44,18 +44,13 @@ public class OthersHook extends Hook {
             MethodHookHandler.hookMethod(getMethod, new MethodHookCallBack() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    if("ro.product.brand".equals(param.args[0])) {
+                    if("ro.product.device".equals(param.args[0])) {
                         String[] callingInfo = getCallingInfo(param.method.getName());
                         Logger logger = new Logger();
                         logger.setTag(TAG);
                         logger.setCallingInfo(callingInfo[0]);
                         logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                        String key = (String)param.getResult();
-                        if("ro.product.device".equals(key)) {
-                            logger.recordAPICalling(param, "获取设备名称");
-                        } else {
-                            logger.recordAPICalling(param, "获取其他设备信息");
-                        }
+                        logger.recordAPICalling(param, "获取设备名称");
                     }
                 }
             });
@@ -63,7 +58,6 @@ public class OthersHook extends Hook {
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
 }
