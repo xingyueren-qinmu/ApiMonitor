@@ -39,8 +39,8 @@ public class OthersHook extends Hook {
         }
 
         try {
-            Method getMethod = Reflector.findMethod("SystemProperties", packageParam.classLoader,
-                    "get", String.class, String.class);
+            Method getMethod = Reflector.findMethod("android.os.SystemProperties",
+                    packageParam.classLoader, "get", String.class, String.class);
             MethodHookHandler.hookMethod(getMethod, new MethodHookCallBack() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
