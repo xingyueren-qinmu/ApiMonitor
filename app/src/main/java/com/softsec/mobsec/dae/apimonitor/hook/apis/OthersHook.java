@@ -44,19 +44,19 @@ public class OthersHook extends Hook {
             MethodHookHandler.hookMethod(getMethod, new MethodHookCallBack() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    if("ro.product.device".equals(param.args[0])) {
-                        String[] callingInfo = getCallingInfo(param.method.getName());
-                        Logger logger = new Logger();
-                        logger.setTag(TAG);
-                        logger.setCallingInfo(callingInfo[0]);
-                        logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                        logger.recordAPICalling(param, "获取设备名称");
-                    }
+                    String[] callingInfo = getCallingInfo(param.method.getName());
+                    Logger logger = new Logger();
+                    logger.setTag(TAG);
+                    logger.setCallingInfo(callingInfo[0]);
+                    logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
+                    logger.addRelatedAttrs("return", (String) param.getResult());
+                    String tag = "ro.product.device".equals(param.args[0]) ?
+                            "获取设备名称" : "获取其他信息";
+                    logger.recordAPICalling(param, tag, "key", (String)param.args[0]);
                 }
             });
-
-        } catch (NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.logError(e);
         }
     }
 
