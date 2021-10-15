@@ -4,8 +4,8 @@ import android.content.ContextWrapper;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.io.File;
@@ -22,8 +22,6 @@ public class FileSystemHook extends Hook {
 
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-
-
         Method openFileOutputMethod = Reflector.findMethod(ContextWrapper.class, "openFileOutput", String.class, "int");
         MethodHookHandler.hookMethod(openFileOutputMethod, new MethodHookCallBack() {
             @Override

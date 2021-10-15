@@ -12,6 +12,7 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.ContentResolverHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.ContextImplHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.CookieManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.CryptoHook;
+import com.softsec.mobsec.dae.apimonitor.hook.apis.FileSystemHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.IPCHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.LocationManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.MediaRecorderHook;
@@ -25,11 +26,8 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.SensorManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.SettingsHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.SmsManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.TelephonyManagerHook;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.TestHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.WebViewHook;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.HttpHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.NetStreamHook;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.OkHttpHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.httphook.virjarSocketHook.SocketMonitor;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
 import com.softsec.mobsec.dae.apimonitor.util.Config;
@@ -170,12 +168,11 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 
     private void startAllHooks(XC_LoadPackage.LoadPackageParam lpparam) {
         new XposedHide().initAllHooks(lpparam);
-
         new CryptoHook().initAllHooks(lpparam);
-//        new FileSystemHook().initAllHooks(lpparam);
+        new FileSystemHook().initAllHooks(lpparam);
         new IPCHook().initAllHooks(lpparam);
-        new HttpHook().initAllHooks(lpparam);
-        new OkHttpHook().initAllHooks(lpparam);
+//        new HttpHook().initAllHooks(lpparam);
+//        new OkHttpHook().initAllHooks(lpparam);
         new AccountManagerHook().initAllHooks(lpparam);
         new CameraHook().initAllHooks(lpparam);
         new TelephonyManagerHook().initAllHooks(lpparam);
@@ -198,7 +195,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new SettingsHook().initAllHooks(lpparam);
         new NetStreamHook().initAllHooks(lpparam);
         new OthersHook().initAllHooks(lpparam);
-        new TestHook().initAllHooks(lpparam);
+//        new TestHook().initAllHooks(lpparam);
         setupSocketMonitor(lpparam);
     }
 }
