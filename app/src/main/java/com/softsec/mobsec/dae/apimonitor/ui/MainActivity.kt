@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                 val host = et_main_ip.text.toString() + ":" + et_main_port.text.toString()
                 serverAddress = SharedPreferencesUtil.getString(Config.SP_SERVER_ADDRESS)
                 val intent = Intent(this@MainActivity, MainService::class.java)
+                intent.`package`
                 intent.putExtra(Config.INTENT_DIALING_MOD, true)
                 if(serverAddress != host)
                     stopService(intent)

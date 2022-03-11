@@ -7,12 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
@@ -24,7 +23,6 @@ public class IPCHook extends Hook {
 
     @Override
     public void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-
 
         Method startActivitiesMethod = Reflector.findMethod(ContextWrapper.class, "startActivities", Intent[].class);
         MethodHookHandler.hookMethod(startActivitiesMethod, new MethodHookCallBack() {
@@ -177,7 +175,6 @@ public class IPCHook extends Hook {
                 logger.recordAPICalling(param, "注册广播接收器", "Intent", sb.toString().substring(0, sb.length() - 1));
             }
         });
-
 
     }
 }

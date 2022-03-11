@@ -1,12 +1,9 @@
 package com.softsec.mobsec.dae.apimonitor.hook.apis;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
-
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 import com.softsec.mobsec.dae.apimonitor.util.Util;
 
@@ -71,7 +68,7 @@ public class CryptoHook extends Hook {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 synchronized (logger) {
-                    logger.addRelatedAttrs("IV", (String) param.getResult());
+                    logger.addRelatedAttrs("IV", Util.byteArrayToString((byte[]) param.getResult()));
                 }
             }
         });

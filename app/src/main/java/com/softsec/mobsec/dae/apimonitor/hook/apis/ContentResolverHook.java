@@ -9,8 +9,8 @@ import android.text.TextUtils;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
@@ -90,8 +90,7 @@ public class ContentResolverHook extends Hook {
 					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-					logger.recordAPICalling(param,
-						"监听本机数据",
+					logger.recordAPICalling(param,"监听本机数据",
 							"数据类型", privacyType,
 							"URI", uri.toString(),
 							"ClassName", param.args[1].getClass().toString());

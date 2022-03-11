@@ -49,7 +49,7 @@ public class OthersHook extends Hook {
                     logger.setTag(TAG);
                     logger.setCallingInfo(callingInfo[0]);
                     logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-                    logger.addRelatedAttrs("return", (String) param.getResult());
+                    logger.addRelatedAttrs("result", (String) param.getResult());
                     String tag = "ro.product.device".equals(param.args[0]) ?
                             "获取设备名称" : "获取其他信息";
                     logger.recordAPICalling(param, tag, "key", (String)param.args[0]);

@@ -28,7 +28,6 @@ public class FileSystemHook extends Hook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String name = (String) param.args[0];
                 int mode = (int) param.args[1];
-
                 if (name.contains("DAEAM")) {
                     XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                 } else {

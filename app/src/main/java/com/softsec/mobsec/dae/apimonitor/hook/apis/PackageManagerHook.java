@@ -60,7 +60,7 @@ public class PackageManagerHook extends Hook {
 					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-					logger.addRelatedAttrs("return", sb.toString());
+					logger.addRelatedAttrs("result", sb.toString());
 					logger.recordAPICalling(param, "获取本机安装应用");
 				}
 			});
@@ -85,7 +85,7 @@ public class PackageManagerHook extends Hook {
 					logger.setTag(TAG);
 					logger.setCallingInfo(callingInfo[0]);
 					logger.addRelatedAttrs("xrefFrom", callingInfo[1]);
-					logger.addRelatedAttrs("return", sb.toString());
+					logger.addRelatedAttrs("result", sb.toString());
 					logger.recordAPICalling(param, "获取本机安装应用");
 				}
 			});

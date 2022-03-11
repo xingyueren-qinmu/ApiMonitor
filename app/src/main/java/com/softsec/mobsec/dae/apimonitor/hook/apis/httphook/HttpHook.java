@@ -2,29 +2,14 @@ package com.softsec.mobsec.dae.apimonitor.hook.apis.httphook;
 
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Hook;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Logger;
-import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookCallBack;
+import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.MethodHookHandler;
 import com.softsec.mobsec.dae.apimonitor.hook.hookUtils.Reflector;
 
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import kotlin.Pair;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okio.Buffer;
-import okio.BufferedSink;
-
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 /**
  * @author qinmu997

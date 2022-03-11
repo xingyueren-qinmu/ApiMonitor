@@ -20,11 +20,11 @@
         android:id="@+id/btn_main_chooseapp"
         android:layout_width="342dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/iv_main_logo"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="16dp"
         android:background="#3E7FAE"
-        android:layout_below="@id/iv_main_logo"
-        android:layout_centerHorizontal="true"
         android:text="动态监控"
         android:textColor="#FFFFFF"
         android:textSize="36dp" />

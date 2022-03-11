@@ -1,5 +1,7 @@
 package com.softsec.mobsec.dae.apimonitor.hook;
 
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -13,7 +15,6 @@ import com.softsec.mobsec.dae.apimonitor.hook.apis.ContextImplHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.CookieManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.CryptoHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.FileSystemHook;
-import com.softsec.mobsec.dae.apimonitor.hook.apis.IPCHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.LocationManagerHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.MediaRecorderHook;
 import com.softsec.mobsec.dae.apimonitor.hook.apis.NetInfoHook;
@@ -43,8 +44,6 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
  * @author qinmu997
@@ -167,12 +166,12 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
 
 
     private void startAllHooks(XC_LoadPackage.LoadPackageParam lpparam) {
-        new XposedHide().initAllHooks(lpparam);
+//        new XposedHide().initAllHooks(lpparam);
         new CryptoHook().initAllHooks(lpparam);
         new FileSystemHook().initAllHooks(lpparam);
-        new IPCHook().initAllHooks(lpparam);
-//        new HttpHook().initAllHooks(lpparam);
-//        new OkHttpHook().initAllHooks(lpparam);
+//        new IPCHook().initAllHooks(lpparam);
+////        new HttpHook().initAllHooks(lpparam);
+////        new OkHttpHook().initAllHooks(lpparam);
         new AccountManagerHook().initAllHooks(lpparam);
         new CameraHook().initAllHooks(lpparam);
         new TelephonyManagerHook().initAllHooks(lpparam);
@@ -195,6 +194,7 @@ public class XposedModule implements IXposedHookLoadPackage, IXposedHookZygoteIn
         new SettingsHook().initAllHooks(lpparam);
         new NetStreamHook().initAllHooks(lpparam);
         new OthersHook().initAllHooks(lpparam);
+//        new FileOutputStreamHook().initAllHooks(lpparam);
 //        new TestHook().initAllHooks(lpparam);
         setupSocketMonitor(lpparam);
     }
